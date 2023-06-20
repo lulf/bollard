@@ -996,7 +996,7 @@ pub struct ContainerConfig {
     /// Signal to stop a container as a string or unsigned integer. 
     #[serde(rename = "StopSignal")]
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub stop_signal: Option<String>,
+    pub stop_signal: Option<i32>,
 
     /// Timeout to stop a container in seconds.
     #[serde(rename = "StopTimeout")]
