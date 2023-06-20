@@ -971,7 +971,7 @@ pub struct ContainerConfig {
     /// The entry point for the container as a string or an array of strings.  If the array consists of exactly one empty string (`[\"\"]`) then the entry point is reset to system default (i.e., the entry point used by docker when there is no `ENTRYPOINT` instruction in the `Dockerfile`). 
     #[serde(rename = "Entrypoint")]
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub entrypoint: Option<Vec<String>>,
+    pub entrypoint: Option<String>,
 
     /// Disable networking for the container.
     #[serde(rename = "NetworkDisabled")]
@@ -3403,7 +3403,7 @@ impl ::std::fmt::Display for MountBindOptionsPropagationEnum {
 impl ::std::str::FromStr for MountBindOptionsPropagationEnum {
     type Err = String;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s { 
+        match s {
             "" => Ok(MountBindOptionsPropagationEnum::EMPTY),
             "private" => Ok(MountBindOptionsPropagationEnum::PRIVATE),
             "rprivate" => Ok(MountBindOptionsPropagationEnum::RPRIVATE),
@@ -3418,7 +3418,7 @@ impl ::std::str::FromStr for MountBindOptionsPropagationEnum {
 
 impl ::std::convert::AsRef<str> for MountBindOptionsPropagationEnum {
     fn as_ref(&self) -> &str {
-        match self { 
+        match self {
             MountBindOptionsPropagationEnum::EMPTY => "",
             MountBindOptionsPropagationEnum::PRIVATE => "private",
             MountBindOptionsPropagationEnum::RPRIVATE => "rprivate",
@@ -3430,54 +3430,53 @@ impl ::std::convert::AsRef<str> for MountBindOptionsPropagationEnum {
     }
 }
 
-/// MountPoint represents a mount point configuration inside the container. This is used for reporting the mountpoints in use by a container. 
+/// MountPoint represents a mount point configuration inside the container. This is used for reporting the mountpoints in use by a container.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct MountPoint {
-    /// The mount type:  - `bind` a mount of a file or directory from the host into the container. - `volume` a docker volume with the given `Name`. - `tmpfs` a `tmpfs`. - `npipe` a named pipe from the host into the container. - `cluster` a Swarm cluster volume 
+    /// The mount type:  - `bind` a mount of a file or directory from the host into the container. - `volume` a docker volume with the given `Name`. - `tmpfs` a `tmpfs`. - `npipe` a named pipe from the host into the container. - `cluster` a Swarm cluster volume
     #[serde(rename = "Type")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub typ: Option<MountPointTypeEnum>,
 
-    /// Name is the name reference to the underlying data defined by `Source` e.g., the volume name. 
+    /// Name is the name reference to the underlying data defined by `Source` e.g., the volume name.
     #[serde(rename = "Name")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
-    /// Source location of the mount.  For volumes, this contains the storage location of the volume (within `/var/lib/docker/volumes/`). For bind-mounts, and `npipe`, this contains the source (host) part of the bind-mount. For `tmpfs` mount points, this field is empty. 
+    /// Source location of the mount.  For volumes, this contains the storage location of the volume (within `/var/lib/docker/volumes/`). For bind-mounts, and `npipe`, this contains the source (host) part of the bind-mount. For `tmpfs` mount points, this field is empty.
     #[serde(rename = "Source")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub source: Option<String>,
 
-    /// Destination is the path relative to the container root (`/`) where the `Source` is mounted inside the container. 
+    /// Destination is the path relative to the container root (`/`) where the `Source` is mounted inside the container.
     #[serde(rename = "Destination")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub destination: Option<String>,
 
-    /// Driver is the volume driver used to create the volume (if it is a volume). 
+    /// Driver is the volume driver used to create the volume (if it is a volume).
     #[serde(rename = "Driver")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub driver: Option<String>,
 
-    /// Mode is a comma separated list of options supplied by the user when creating the bind/volume mount.  The default is platform-specific (`\"z\"` on Linux, empty on Windows). 
+    /// Mode is a comma separated list of options supplied by the user when creating the bind/volume mount.  The default is platform-specific (`\"z\"` on Linux, empty on Windows).
     #[serde(rename = "Mode")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub mode: Option<String>,
 
-    /// Whether the mount is mounted writable (read-write). 
+    /// Whether the mount is mounted writable (read-write).
     #[serde(rename = "RW")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub rw: Option<bool>,
 
-    /// Propagation describes how mounts are propagated from the host into the mount point, and vice-versa. Refer to the [Linux kernel documentation](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt) for details. This field is not used on Windows. 
+    /// Propagation describes how mounts are propagated from the host into the mount point, and vice-versa. Refer to the [Linux kernel documentation](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt) for details. This field is not used on Windows.
     #[serde(rename = "Propagation")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub propagation: Option<String>,
-
 }
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, Eq, Ord)]
-pub enum MountPointTypeEnum { 
+pub enum MountPointTypeEnum {
     #[serde(rename = "")]
     EMPTY,
     #[serde(rename = "bind")]
@@ -3494,14 +3493,13 @@ pub enum MountPointTypeEnum {
 
 impl ::std::fmt::Display for MountPointTypeEnum {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        match *self { 
+        match *self {
             MountPointTypeEnum::EMPTY => write!(f, ""),
             MountPointTypeEnum::BIND => write!(f, "{}", "bind"),
             MountPointTypeEnum::VOLUME => write!(f, "{}", "volume"),
             MountPointTypeEnum::TMPFS => write!(f, "{}", "tmpfs"),
             MountPointTypeEnum::NPIPE => write!(f, "{}", "npipe"),
             MountPointTypeEnum::CLUSTER => write!(f, "{}", "cluster"),
-
         }
     }
 }
@@ -3509,7 +3507,7 @@ impl ::std::fmt::Display for MountPointTypeEnum {
 impl ::std::str::FromStr for MountPointTypeEnum {
     type Err = String;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s { 
+        match s {
             "" => Ok(MountPointTypeEnum::EMPTY),
             "bind" => Ok(MountPointTypeEnum::BIND),
             "volume" => Ok(MountPointTypeEnum::VOLUME),
@@ -3523,7 +3521,7 @@ impl ::std::str::FromStr for MountPointTypeEnum {
 
 impl ::std::convert::AsRef<str> for MountPointTypeEnum {
     fn as_ref(&self) -> &str {
-        match self { 
+        match self {
             MountPointTypeEnum::EMPTY => "",
             MountPointTypeEnum::BIND => "bind",
             MountPointTypeEnum::VOLUME => "volume",
@@ -3546,7 +3544,6 @@ pub struct MountTmpfsOptions {
     #[serde(rename = "Mode")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub mode: Option<i64>,
-
 }
 
 /// Optional configuration for the `volume` type.
@@ -3565,7 +3562,6 @@ pub struct MountVolumeOptions {
     #[serde(rename = "DriverConfig")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub driver_config: Option<MountVolumeOptionsDriverConfig>,
-
 }
 
 /// Map of driver specific options
@@ -3580,7 +3576,6 @@ pub struct MountVolumeOptionsDriverConfig {
     #[serde(rename = "Options")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub options: Option<HashMap<String, String>>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -3641,27 +3636,25 @@ pub struct Network {
     #[serde(rename = "Labels")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub labels: Option<HashMap<String, String>>,
-
 }
 
-/// Specifies how a service should be attached to a particular network. 
+/// Specifies how a service should be attached to a particular network.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct NetworkAttachmentConfig {
-    /// The target network for attachment. Must be a network name or ID. 
+    /// The target network for attachment. Must be a network name or ID.
     #[serde(rename = "Target")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub target: Option<String>,
 
-    /// Discoverable alternate names for the service on this network. 
+    /// Discoverable alternate names for the service on this network.
     #[serde(rename = "Aliases")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub aliases: Option<Vec<String>>,
 
-    /// Driver attachment options for the network target. 
+    /// Driver attachment options for the network target.
     #[serde(rename = "DriverOpts")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub driver_opts: Option<HashMap<String, String>>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -3674,7 +3667,6 @@ pub struct NetworkConnectRequest {
     #[serde(rename = "EndpointConfig")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub endpoint_config: Option<EndpointSettings>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -3698,7 +3690,6 @@ pub struct NetworkContainer {
     #[serde(rename = "IPv6Address")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub ipv6_address: Option<String>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -3707,7 +3698,7 @@ pub struct NetworkCreateRequest {
     #[serde(rename = "Name")]
     pub name: String,
 
-    /// Check for networks with duplicate names. Since Network is primarily keyed based on a random ID and not on the name, and network name is strictly a user-friendly alias to the network which is uniquely identified using ID, there is no guaranteed way to check for duplicates. CheckDuplicate is there to provide a best effort checking of any networks which has the same name but it is not guaranteed to catch all name collisions. 
+    /// Check for networks with duplicate names. Since Network is primarily keyed based on a random ID and not on the name, and network name is strictly a user-friendly alias to the network which is uniquely identified using ID, there is no guaranteed way to check for duplicates. CheckDuplicate is there to provide a best effort checking of any networks which has the same name but it is not guaranteed to catch all name collisions.
     #[serde(rename = "CheckDuplicate")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub check_duplicate: Option<bool>,
@@ -3722,12 +3713,12 @@ pub struct NetworkCreateRequest {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub internal: Option<bool>,
 
-    /// Globally scoped network is manually attachable by regular containers from workers in swarm mode. 
+    /// Globally scoped network is manually attachable by regular containers from workers in swarm mode.
     #[serde(rename = "Attachable")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub attachable: Option<bool>,
 
-    /// Ingress network is the network which provides the routing-mesh in swarm mode. 
+    /// Ingress network is the network which provides the routing-mesh in swarm mode.
     #[serde(rename = "Ingress")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub ingress: Option<bool>,
@@ -3751,7 +3742,6 @@ pub struct NetworkCreateRequest {
     #[serde(rename = "Labels")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub labels: Option<HashMap<String, String>>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -3764,21 +3754,19 @@ pub struct NetworkCreateResponse {
     #[serde(rename = "Warning")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub warning: Option<String>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct NetworkDisconnectRequest {
-    /// The ID or name of the container to disconnect from the network. 
+    /// The ID or name of the container to disconnect from the network.
     #[serde(rename = "Container")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub container: Option<String>,
 
-    /// Force the container to disconnect from the network. 
+    /// Force the container to disconnect from the network.
     #[serde(rename = "Force")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub force: Option<bool>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -3787,7 +3775,6 @@ pub struct NetworkPruneResponse {
     #[serde(rename = "NetworksDeleted")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub networks_deleted: Option<Vec<String>>,
-
 }
 
 /// NetworkSettings exposes the network settings in the API
@@ -3803,7 +3790,7 @@ pub struct NetworkSettings {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub sandbox_id: Option<String>,
 
-    /// Indicates if hairpin NAT should be enabled on the virtual interface. 
+    /// Indicates if hairpin NAT should be enabled on the virtual interface.
     #[serde(rename = "HairpinMode")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub hairpin_mode: Option<bool>,
@@ -3827,71 +3814,69 @@ pub struct NetworkSettings {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub sandbox_key: Option<String>,
 
-    /// 
+    ///
     #[serde(rename = "SecondaryIPAddresses")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub secondary_ip_addresses: Option<Vec<Address>>,
 
-    /// 
+    ///
     #[serde(rename = "SecondaryIPv6Addresses")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub secondary_ipv6_addresses: Option<Vec<Address>>,
 
-    /// EndpointID uniquely represents a service endpoint in a Sandbox.  <p><br /></p>  > **Deprecated**: This field is only propagated when attached to the > default \"bridge\" network. Use the information from the \"bridge\" > network inside the `Networks` map instead, which contains the same > information. This field was deprecated in Docker 1.9 and is scheduled > to be removed in Docker 17.12.0 
+    /// EndpointID uniquely represents a service endpoint in a Sandbox.  <p><br /></p>  > **Deprecated**: This field is only propagated when attached to the > default \"bridge\" network. Use the information from the \"bridge\" > network inside the `Networks` map instead, which contains the same > information. This field was deprecated in Docker 1.9 and is scheduled > to be removed in Docker 17.12.0
     #[serde(rename = "EndpointID")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub endpoint_id: Option<String>,
 
-    /// Gateway address for the default \"bridge\" network.  <p><br /></p>  > **Deprecated**: This field is only propagated when attached to the > default \"bridge\" network. Use the information from the \"bridge\" > network inside the `Networks` map instead, which contains the same > information. This field was deprecated in Docker 1.9 and is scheduled > to be removed in Docker 17.12.0 
+    /// Gateway address for the default \"bridge\" network.  <p><br /></p>  > **Deprecated**: This field is only propagated when attached to the > default \"bridge\" network. Use the information from the \"bridge\" > network inside the `Networks` map instead, which contains the same > information. This field was deprecated in Docker 1.9 and is scheduled > to be removed in Docker 17.12.0
     #[serde(rename = "Gateway")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub gateway: Option<String>,
 
-    /// Global IPv6 address for the default \"bridge\" network.  <p><br /></p>  > **Deprecated**: This field is only propagated when attached to the > default \"bridge\" network. Use the information from the \"bridge\" > network inside the `Networks` map instead, which contains the same > information. This field was deprecated in Docker 1.9 and is scheduled > to be removed in Docker 17.12.0 
+    /// Global IPv6 address for the default \"bridge\" network.  <p><br /></p>  > **Deprecated**: This field is only propagated when attached to the > default \"bridge\" network. Use the information from the \"bridge\" > network inside the `Networks` map instead, which contains the same > information. This field was deprecated in Docker 1.9 and is scheduled > to be removed in Docker 17.12.0
     #[serde(rename = "GlobalIPv6Address")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub global_ipv6_address: Option<String>,
 
-    /// Mask length of the global IPv6 address.  <p><br /></p>  > **Deprecated**: This field is only propagated when attached to the > default \"bridge\" network. Use the information from the \"bridge\" > network inside the `Networks` map instead, which contains the same > information. This field was deprecated in Docker 1.9 and is scheduled > to be removed in Docker 17.12.0 
+    /// Mask length of the global IPv6 address.  <p><br /></p>  > **Deprecated**: This field is only propagated when attached to the > default \"bridge\" network. Use the information from the \"bridge\" > network inside the `Networks` map instead, which contains the same > information. This field was deprecated in Docker 1.9 and is scheduled > to be removed in Docker 17.12.0
     #[serde(rename = "GlobalIPv6PrefixLen")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub global_ipv6_prefix_len: Option<i64>,
 
-    /// IPv4 address for the default \"bridge\" network.  <p><br /></p>  > **Deprecated**: This field is only propagated when attached to the > default \"bridge\" network. Use the information from the \"bridge\" > network inside the `Networks` map instead, which contains the same > information. This field was deprecated in Docker 1.9 and is scheduled > to be removed in Docker 17.12.0 
+    /// IPv4 address for the default \"bridge\" network.  <p><br /></p>  > **Deprecated**: This field is only propagated when attached to the > default \"bridge\" network. Use the information from the \"bridge\" > network inside the `Networks` map instead, which contains the same > information. This field was deprecated in Docker 1.9 and is scheduled > to be removed in Docker 17.12.0
     #[serde(rename = "IPAddress")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub ip_address: Option<String>,
 
-    /// Mask length of the IPv4 address.  <p><br /></p>  > **Deprecated**: This field is only propagated when attached to the > default \"bridge\" network. Use the information from the \"bridge\" > network inside the `Networks` map instead, which contains the same > information. This field was deprecated in Docker 1.9 and is scheduled > to be removed in Docker 17.12.0 
+    /// Mask length of the IPv4 address.  <p><br /></p>  > **Deprecated**: This field is only propagated when attached to the > default \"bridge\" network. Use the information from the \"bridge\" > network inside the `Networks` map instead, which contains the same > information. This field was deprecated in Docker 1.9 and is scheduled > to be removed in Docker 17.12.0
     #[serde(rename = "IPPrefixLen")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub ip_prefix_len: Option<i64>,
 
-    /// IPv6 gateway address for this network.  <p><br /></p>  > **Deprecated**: This field is only propagated when attached to the > default \"bridge\" network. Use the information from the \"bridge\" > network inside the `Networks` map instead, which contains the same > information. This field was deprecated in Docker 1.9 and is scheduled > to be removed in Docker 17.12.0 
+    /// IPv6 gateway address for this network.  <p><br /></p>  > **Deprecated**: This field is only propagated when attached to the > default \"bridge\" network. Use the information from the \"bridge\" > network inside the `Networks` map instead, which contains the same > information. This field was deprecated in Docker 1.9 and is scheduled > to be removed in Docker 17.12.0
     #[serde(rename = "IPv6Gateway")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub ipv6_gateway: Option<String>,
 
-    /// MAC address for the container on the default \"bridge\" network.  <p><br /></p>  > **Deprecated**: This field is only propagated when attached to the > default \"bridge\" network. Use the information from the \"bridge\" > network inside the `Networks` map instead, which contains the same > information. This field was deprecated in Docker 1.9 and is scheduled > to be removed in Docker 17.12.0 
+    /// MAC address for the container on the default \"bridge\" network.  <p><br /></p>  > **Deprecated**: This field is only propagated when attached to the > default \"bridge\" network. Use the information from the \"bridge\" > network inside the `Networks` map instead, which contains the same > information. This field was deprecated in Docker 1.9 and is scheduled > to be removed in Docker 17.12.0
     #[serde(rename = "MacAddress")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub mac_address: Option<String>,
 
-    /// Information about all networks that the container is connected to. 
+    /// Information about all networks that the container is connected to.
     #[serde(rename = "Networks")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub networks: Option<HashMap<String, EndpointSettings>>,
-
 }
 
-/// NetworkingConfig represents the container's networking configuration for each of its interfaces. It is used for the networking configs specified in the `docker create` and `docker network connect` commands. 
+/// NetworkingConfig represents the container's networking configuration for each of its interfaces. It is used for the networking configs specified in the `docker create` and `docker network connect` commands.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct NetworkingConfig {
-    /// A mapping of network name to endpoint configuration for that network. 
+    /// A mapping of network name to endpoint configuration for that network.
     #[serde(rename = "EndpointsConfig")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub endpoints_config: Option<HashMap<String, EndpointSettings>>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -3904,7 +3889,7 @@ pub struct Node {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub version: Option<ObjectVersion>,
 
-    /// Date and time at which the node was added to the swarm in [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds. 
+    /// Date and time at which the node was added to the swarm in [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
     #[serde(rename = "CreatedAt")]
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(
@@ -3914,7 +3899,7 @@ pub struct Node {
     )]
     pub created_at: Option<BollardDate>,
 
-    /// Date and time at which the node was last updated in [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds. 
+    /// Date and time at which the node was last updated in [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
     #[serde(rename = "UpdatedAt")]
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(
@@ -3939,10 +3924,9 @@ pub struct Node {
     #[serde(rename = "ManagerStatus")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub manager_status: Option<ManagerStatus>,
-
 }
 
-/// NodeDescription encapsulates the properties of the Node as reported by the agent. 
+/// NodeDescription encapsulates the properties of the Node as reported by the agent.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct NodeDescription {
     #[serde(rename = "Hostname")]
@@ -3964,7 +3948,6 @@ pub struct NodeDescription {
     #[serde(rename = "TLSInfo")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub tls_info: Option<TlsInfo>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -3988,12 +3971,11 @@ pub struct NodeSpec {
     #[serde(rename = "Availability")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub availability: Option<NodeSpecAvailabilityEnum>,
-
 }
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, Eq, Ord)]
-pub enum NodeSpecRoleEnum { 
+pub enum NodeSpecRoleEnum {
     #[serde(rename = "")]
     EMPTY,
     #[serde(rename = "worker")]
@@ -4004,11 +3986,10 @@ pub enum NodeSpecRoleEnum {
 
 impl ::std::fmt::Display for NodeSpecRoleEnum {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        match *self { 
+        match *self {
             NodeSpecRoleEnum::EMPTY => write!(f, ""),
             NodeSpecRoleEnum::WORKER => write!(f, "{}", "worker"),
             NodeSpecRoleEnum::MANAGER => write!(f, "{}", "manager"),
-
         }
     }
 }
@@ -4016,7 +3997,7 @@ impl ::std::fmt::Display for NodeSpecRoleEnum {
 impl ::std::str::FromStr for NodeSpecRoleEnum {
     type Err = String;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s { 
+        match s {
             "" => Ok(NodeSpecRoleEnum::EMPTY),
             "worker" => Ok(NodeSpecRoleEnum::WORKER),
             "manager" => Ok(NodeSpecRoleEnum::MANAGER),
@@ -4027,7 +4008,7 @@ impl ::std::str::FromStr for NodeSpecRoleEnum {
 
 impl ::std::convert::AsRef<str> for NodeSpecRoleEnum {
     fn as_ref(&self) -> &str {
-        match self { 
+        match self {
             NodeSpecRoleEnum::EMPTY => "",
             NodeSpecRoleEnum::WORKER => "worker",
             NodeSpecRoleEnum::MANAGER => "manager",
@@ -4037,7 +4018,7 @@ impl ::std::convert::AsRef<str> for NodeSpecRoleEnum {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, Eq, Ord)]
-pub enum NodeSpecAvailabilityEnum { 
+pub enum NodeSpecAvailabilityEnum {
     #[serde(rename = "")]
     EMPTY,
     #[serde(rename = "active")]
@@ -4050,12 +4031,11 @@ pub enum NodeSpecAvailabilityEnum {
 
 impl ::std::fmt::Display for NodeSpecAvailabilityEnum {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        match *self { 
+        match *self {
             NodeSpecAvailabilityEnum::EMPTY => write!(f, ""),
             NodeSpecAvailabilityEnum::ACTIVE => write!(f, "{}", "active"),
             NodeSpecAvailabilityEnum::PAUSE => write!(f, "{}", "pause"),
             NodeSpecAvailabilityEnum::DRAIN => write!(f, "{}", "drain"),
-
         }
     }
 }
@@ -4063,7 +4043,7 @@ impl ::std::fmt::Display for NodeSpecAvailabilityEnum {
 impl ::std::str::FromStr for NodeSpecAvailabilityEnum {
     type Err = String;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s { 
+        match s {
             "" => Ok(NodeSpecAvailabilityEnum::EMPTY),
             "active" => Ok(NodeSpecAvailabilityEnum::ACTIVE),
             "pause" => Ok(NodeSpecAvailabilityEnum::PAUSE),
@@ -4075,7 +4055,7 @@ impl ::std::str::FromStr for NodeSpecAvailabilityEnum {
 
 impl ::std::convert::AsRef<str> for NodeSpecAvailabilityEnum {
     fn as_ref(&self) -> &str {
-        match self { 
+        match self {
             NodeSpecAvailabilityEnum::EMPTY => "",
             NodeSpecAvailabilityEnum::ACTIVE => "active",
             NodeSpecAvailabilityEnum::PAUSE => "pause",
@@ -4091,7 +4071,7 @@ impl ::std::convert::AsRef<str> for NodeSpecAvailabilityEnum {
 #[allow(non_camel_case_types)]
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, Eq, Ord)]
-pub enum NodeState { 
+pub enum NodeState {
     #[serde(rename = "unknown")]
     UNKNOWN,
     #[serde(rename = "down")]
@@ -4104,7 +4084,7 @@ pub enum NodeState {
 
 impl ::std::fmt::Display for NodeState {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        match *self { 
+        match *self {
             NodeState::UNKNOWN => write!(f, "{}", "unknown"),
             NodeState::DOWN => write!(f, "{}", "down"),
             NodeState::READY => write!(f, "{}", "ready"),
@@ -4127,12 +4107,12 @@ impl ::std::str::FromStr for NodeState {
 }
 
 impl std::default::Default for NodeState {
-    fn default() -> Self { 
+    fn default() -> Self {
         NodeState::UNKNOWN
     }
 }
 
-/// NodeStatus represents the status of a node.  It provides the current status of the node, as seen by the manager. 
+/// NodeStatus represents the status of a node.  It provides the current status of the node, as seen by the manager.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct NodeStatus {
     #[serde(rename = "State")]
@@ -4147,66 +4127,62 @@ pub struct NodeStatus {
     #[serde(rename = "Addr")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub addr: Option<String>,
-
 }
 
-/// The version number of the object such as node, service, etc. This is needed to avoid conflicting writes. The client must send the version number along with the modified specification when updating these objects.  This approach ensures safe concurrency and determinism in that the change on the object may not be applied if the version number has changed from the last read. In other words, if two update requests specify the same base version, only one of the requests can succeed. As a result, two separate update requests that happen at the same time will not unintentionally overwrite each other. 
+/// The version number of the object such as node, service, etc. This is needed to avoid conflicting writes. The client must send the version number along with the modified specification when updating these objects.  This approach ensures safe concurrency and determinism in that the change on the object may not be applied if the version number has changed from the last read. In other words, if two update requests specify the same base version, only one of the requests can succeed. As a result, two separate update requests that happen at the same time will not unintentionally overwrite each other.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct ObjectVersion {
     #[serde(rename = "Index")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub index: Option<u64>,
-
 }
 
-/// A descriptor struct containing digest, media type, and size, as defined in the [OCI Content Descriptors Specification](https://github.com/opencontainers/image-spec/blob/v1.0.1/descriptor.md). 
+/// A descriptor struct containing digest, media type, and size, as defined in the [OCI Content Descriptors Specification](https://github.com/opencontainers/image-spec/blob/v1.0.1/descriptor.md).
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct OciDescriptor {
-    /// The media type of the object this schema refers to. 
+    /// The media type of the object this schema refers to.
     #[serde(rename = "mediaType")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub media_type: Option<String>,
 
-    /// The digest of the targeted content. 
+    /// The digest of the targeted content.
     #[serde(rename = "digest")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub digest: Option<String>,
 
-    /// The size in bytes of the blob. 
+    /// The size in bytes of the blob.
     #[serde(rename = "size")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub size: Option<i64>,
-
 }
 
-/// Describes the platform which the image in the manifest runs on, as defined in the [OCI Image Index Specification](https://github.com/opencontainers/image-spec/blob/v1.0.1/image-index.md). 
+/// Describes the platform which the image in the manifest runs on, as defined in the [OCI Image Index Specification](https://github.com/opencontainers/image-spec/blob/v1.0.1/image-index.md).
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct OciPlatform {
-    /// The CPU architecture, for example `amd64` or `ppc64`. 
+    /// The CPU architecture, for example `amd64` or `ppc64`.
     #[serde(rename = "architecture")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub architecture: Option<String>,
 
-    /// The operating system, for example `linux` or `windows`. 
+    /// The operating system, for example `linux` or `windows`.
     #[serde(rename = "os")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub os: Option<String>,
 
-    /// Optional field specifying the operating system version, for example on Windows `10.0.19041.1165`. 
+    /// Optional field specifying the operating system version, for example on Windows `10.0.19041.1165`.
     #[serde(rename = "os.version")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub os_version: Option<String>,
 
-    /// Optional field specifying an array of strings, each listing a required OS feature (for example on Windows `win32k`). 
+    /// Optional field specifying an array of strings, each listing a required OS feature (for example on Windows `win32k`).
     #[serde(rename = "os.features")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub os_features: Option<Vec<String>>,
 
-    /// Optional field specifying a variant of the CPU, for example `v7` to specify ARMv7 when architecture is `arm`. 
+    /// Optional field specifying a variant of the CPU, for example `v7` to specify ARMv7 when architecture is `arm`.
     #[serde(rename = "variant")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub variant: Option<String>,
-
 }
 
 /// Represents a peer-node in the swarm
@@ -4217,26 +4193,24 @@ pub struct PeerNode {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub node_id: Option<String>,
 
-    /// IP address and ports at which this node can be reached. 
+    /// IP address and ports at which this node can be reached.
     #[serde(rename = "Addr")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub addr: Option<String>,
-
 }
 
-/// Platform represents the platform (Arch/OS). 
+/// Platform represents the platform (Arch/OS).
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct Platform {
-    /// Architecture represents the hardware architecture (for example, `x86_64`). 
+    /// Architecture represents the hardware architecture (for example, `x86_64`).
     #[serde(rename = "Architecture")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub architecture: Option<String>,
 
-    /// OS represents the Operating System (for example, `linux` or `windows`). 
+    /// OS represents the Operating System (for example, `linux` or `windows`).
     #[serde(rename = "OS")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub os: Option<String>,
-
 }
 
 /// A plugin for the Engine API
@@ -4263,7 +4237,6 @@ pub struct Plugin {
 
     #[serde(rename = "Config")]
     pub config: PluginConfig,
-
 }
 
 /// The config of a plugin.
@@ -4323,7 +4296,6 @@ pub struct PluginConfig {
     #[serde(rename = "rootfs")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub rootfs: Option<PluginConfigRootfs>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -4341,7 +4313,6 @@ pub struct PluginConfigArgs {
     #[serde(rename = "Value")]
     #[serde(deserialize_with = "deserialize_nonoptional_vec")]
     pub value: Vec<String>,
-
 }
 
 /// The interface between Docker and the plugin
@@ -4358,12 +4329,11 @@ pub struct PluginConfigInterface {
     #[serde(rename = "ProtocolScheme")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub protocol_scheme: Option<PluginConfigInterfaceProtocolSchemeEnum>,
-
 }
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, Eq, Ord)]
-pub enum PluginConfigInterfaceProtocolSchemeEnum { 
+pub enum PluginConfigInterfaceProtocolSchemeEnum {
     #[serde(rename = "")]
     EMPTY,
     #[serde(rename = "moby.plugins.http/v1")]
@@ -4372,10 +4342,11 @@ pub enum PluginConfigInterfaceProtocolSchemeEnum {
 
 impl ::std::fmt::Display for PluginConfigInterfaceProtocolSchemeEnum {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        match *self { 
+        match *self {
             PluginConfigInterfaceProtocolSchemeEnum::EMPTY => write!(f, "{}", ""),
-            PluginConfigInterfaceProtocolSchemeEnum::MOBY_PLUGINS_HTTP_V1 => write!(f, "{}", "moby.plugins.http/v1"),
-
+            PluginConfigInterfaceProtocolSchemeEnum::MOBY_PLUGINS_HTTP_V1 => {
+                write!(f, "{}", "moby.plugins.http/v1")
+            }
         }
     }
 }
@@ -4383,9 +4354,11 @@ impl ::std::fmt::Display for PluginConfigInterfaceProtocolSchemeEnum {
 impl ::std::str::FromStr for PluginConfigInterfaceProtocolSchemeEnum {
     type Err = String;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s { 
+        match s {
             "" => Ok(PluginConfigInterfaceProtocolSchemeEnum::EMPTY),
-            "moby.plugins.http/v1" => Ok(PluginConfigInterfaceProtocolSchemeEnum::MOBY_PLUGINS_HTTP_V1),
+            "moby.plugins.http/v1" => {
+                Ok(PluginConfigInterfaceProtocolSchemeEnum::MOBY_PLUGINS_HTTP_V1)
+            }
             x => Err(format!("Invalid enum type: {}", x)),
         }
     }
@@ -4393,7 +4366,7 @@ impl ::std::str::FromStr for PluginConfigInterfaceProtocolSchemeEnum {
 
 impl ::std::convert::AsRef<str> for PluginConfigInterfaceProtocolSchemeEnum {
     fn as_ref(&self) -> &str {
-        match self { 
+        match self {
             PluginConfigInterfaceProtocolSchemeEnum::EMPTY => "",
             PluginConfigInterfaceProtocolSchemeEnum::MOBY_PLUGINS_HTTP_V1 => "moby.plugins.http/v1",
         }
@@ -4412,14 +4385,12 @@ pub struct PluginConfigLinux {
     #[serde(rename = "Devices")]
     #[serde(deserialize_with = "deserialize_nonoptional_vec")]
     pub devices: Vec<PluginDevice>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct PluginConfigNetwork {
     #[serde(rename = "Type")]
     pub typ: String,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -4431,7 +4402,6 @@ pub struct PluginConfigRootfs {
     #[serde(rename = "diff_ids")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub diff_ids: Option<Vec<String>>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -4443,7 +4413,6 @@ pub struct PluginConfigUser {
     #[serde(rename = "GID")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub gid: Option<u32>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -4460,7 +4429,6 @@ pub struct PluginDevice {
 
     #[serde(rename = "Path")]
     pub path: String,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -4477,7 +4445,6 @@ pub struct PluginEnv {
 
     #[serde(rename = "Value")]
     pub value: String,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -4490,7 +4457,6 @@ pub struct PluginInterfaceType {
 
     #[serde(rename = "Version")]
     pub version: String,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -4517,10 +4483,9 @@ pub struct PluginMount {
     #[serde(rename = "Options")]
     #[serde(deserialize_with = "deserialize_nonoptional_vec")]
     pub options: Vec<String>,
-
 }
 
-/// Describes a permission the user has to accept upon installing the plugin. 
+/// Describes a permission the user has to accept upon installing the plugin.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct PluginPrivilege {
     #[serde(rename = "Name")]
@@ -4534,7 +4499,6 @@ pub struct PluginPrivilege {
     #[serde(rename = "Value")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<Vec<String>>,
-
 }
 
 /// Settings that can be modified by users.
@@ -4555,10 +4519,9 @@ pub struct PluginSettings {
     #[serde(rename = "Devices")]
     #[serde(deserialize_with = "deserialize_nonoptional_vec")]
     pub devices: Vec<PluginDevice>,
-
 }
 
-/// Available plugins per type.  <p><br /></p>  > **Note**: Only unmanaged (V1) plugins are included in this list. > V1 plugins are \"lazily\" loaded, and are not returned in this list > if there is no resource using the plugin. 
+/// Available plugins per type.  <p><br /></p>  > **Note**: Only unmanaged (V1) plugins are included in this list. > V1 plugins are \"lazily\" loaded, and are not returned in this list > if there is no resource using the plugin.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct PluginsInfo {
     /// Names of available volume-drivers, and network-driver plugins.
@@ -4580,7 +4543,6 @@ pub struct PluginsInfo {
     #[serde(rename = "Log")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub log: Option<Vec<String>>,
-
 }
 
 /// An open port on a container
@@ -4604,12 +4566,11 @@ pub struct Port {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(with = "::serde_with::As::<::serde_with::NoneAsEmptyString>")]
     pub typ: Option<PortTypeEnum>,
-
 }
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, Eq, Ord)]
-pub enum PortTypeEnum { 
+pub enum PortTypeEnum {
     #[serde(rename = "")]
     EMPTY,
     #[serde(rename = "tcp")]
@@ -4622,12 +4583,11 @@ pub enum PortTypeEnum {
 
 impl ::std::fmt::Display for PortTypeEnum {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        match *self { 
+        match *self {
             PortTypeEnum::EMPTY => write!(f, ""),
             PortTypeEnum::TCP => write!(f, "{}", "tcp"),
             PortTypeEnum::UDP => write!(f, "{}", "udp"),
             PortTypeEnum::SCTP => write!(f, "{}", "sctp"),
-
         }
     }
 }
@@ -4635,7 +4595,7 @@ impl ::std::fmt::Display for PortTypeEnum {
 impl ::std::str::FromStr for PortTypeEnum {
     type Err = String;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s { 
+        match s {
             "" => Ok(PortTypeEnum::EMPTY),
             "tcp" => Ok(PortTypeEnum::TCP),
             "udp" => Ok(PortTypeEnum::UDP),
@@ -4647,7 +4607,7 @@ impl ::std::str::FromStr for PortTypeEnum {
 
 impl ::std::convert::AsRef<str> for PortTypeEnum {
     fn as_ref(&self) -> &str {
-        match self { 
+        match self {
             PortTypeEnum::EMPTY => "",
             PortTypeEnum::TCP => "tcp",
             PortTypeEnum::UDP => "udp",
@@ -4656,7 +4616,7 @@ impl ::std::convert::AsRef<str> for PortTypeEnum {
     }
 }
 
-/// PortBinding represents a binding between a host IP address and a host port. 
+/// PortBinding represents a binding between a host IP address and a host port.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct PortBinding {
     /// Host IP address that the container's port is mapped to.
@@ -4668,10 +4628,9 @@ pub struct PortBinding {
     #[serde(rename = "HostPort")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub host_port: Option<String>,
-
 }
 
-/// PortMap describes the mapping of container ports to host ports, using the container's port-number and protocol as key in the format `<port>/<protocol>`, for example, `80/udp`.  If a container's port is mapped for multiple protocols, separate entries are added to the mapping table. 
+/// PortMap describes the mapping of container ports to host ports, using the container's port-number and protocol as key in the format `<port>/<protocol>`, for example, `80/udp`.  If a container's port is mapped for multiple protocols, separate entries are added to the mapping table.
 // special-casing PortMap, cos swagger-codegen doesn't figure out this type
 pub type PortMap = HashMap<String, Option<Vec<PortBinding>>>;
 
@@ -4696,7 +4655,6 @@ pub struct ProcessConfig {
     #[serde(rename = "arguments")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub arguments: Option<Vec<String>>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -4708,7 +4666,6 @@ pub struct ProgressDetail {
     #[serde(rename = "total")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub total: Option<i64>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -4728,7 +4685,6 @@ pub struct PushImageInfo {
     #[serde(rename = "progressDetail")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub progress_detail: Option<ProgressDetail>,
-
 }
 
 /// Reachability represents the reachability of a node.
@@ -4738,7 +4694,7 @@ pub struct PushImageInfo {
 #[allow(non_camel_case_types)]
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, Eq, Ord)]
-pub enum Reachability { 
+pub enum Reachability {
     #[serde(rename = "unknown")]
     UNKNOWN,
     #[serde(rename = "unreachable")]
@@ -4749,7 +4705,7 @@ pub enum Reachability {
 
 impl ::std::fmt::Display for Reachability {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        match *self { 
+        match *self {
             Reachability::UNKNOWN => write!(f, "{}", "unknown"),
             Reachability::UNREACHABLE => write!(f, "{}", "unreachable"),
             Reachability::REACHABLE => write!(f, "{}", "reachable"),
@@ -4770,25 +4726,25 @@ impl ::std::str::FromStr for Reachability {
 }
 
 impl std::default::Default for Reachability {
-    fn default() -> Self { 
+    fn default() -> Self {
         Reachability::UNKNOWN
     }
 }
 
-/// RegistryServiceConfig stores daemon registry services configuration. 
+/// RegistryServiceConfig stores daemon registry services configuration.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct RegistryServiceConfig {
-    /// List of IP ranges to which nondistributable artifacts can be pushed, using the CIDR syntax [RFC 4632](https://tools.ietf.org/html/4632).  Some images (for example, Windows base images) contain artifacts whose distribution is restricted by license. When these images are pushed to a registry, restricted artifacts are not included.  This configuration override this behavior, and enables the daemon to push nondistributable artifacts to all registries whose resolved IP address is within the subnet described by the CIDR syntax.  This option is useful when pushing images containing nondistributable artifacts to a registry on an air-gapped network so hosts on that network can pull the images without connecting to another server.  > **Warning**: Nondistributable artifacts typically have restrictions > on how and where they can be distributed and shared. Only use this > feature to push artifacts to private registries and ensure that you > are in compliance with any terms that cover redistributing > nondistributable artifacts. 
+    /// List of IP ranges to which nondistributable artifacts can be pushed, using the CIDR syntax [RFC 4632](https://tools.ietf.org/html/4632).  Some images (for example, Windows base images) contain artifacts whose distribution is restricted by license. When these images are pushed to a registry, restricted artifacts are not included.  This configuration override this behavior, and enables the daemon to push nondistributable artifacts to all registries whose resolved IP address is within the subnet described by the CIDR syntax.  This option is useful when pushing images containing nondistributable artifacts to a registry on an air-gapped network so hosts on that network can pull the images without connecting to another server.  > **Warning**: Nondistributable artifacts typically have restrictions > on how and where they can be distributed and shared. Only use this > feature to push artifacts to private registries and ensure that you > are in compliance with any terms that cover redistributing > nondistributable artifacts.
     #[serde(rename = "AllowNondistributableArtifactsCIDRs")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub allow_nondistributable_artifacts_cidrs: Option<Vec<String>>,
 
-    /// List of registry hostnames to which nondistributable artifacts can be pushed, using the format `<hostname>[:<port>]` or `<IP address>[:<port>]`.  Some images (for example, Windows base images) contain artifacts whose distribution is restricted by license. When these images are pushed to a registry, restricted artifacts are not included.  This configuration override this behavior for the specified registries.  This option is useful when pushing images containing nondistributable artifacts to a registry on an air-gapped network so hosts on that network can pull the images without connecting to another server.  > **Warning**: Nondistributable artifacts typically have restrictions > on how and where they can be distributed and shared. Only use this > feature to push artifacts to private registries and ensure that you > are in compliance with any terms that cover redistributing > nondistributable artifacts. 
+    /// List of registry hostnames to which nondistributable artifacts can be pushed, using the format `<hostname>[:<port>]` or `<IP address>[:<port>]`.  Some images (for example, Windows base images) contain artifacts whose distribution is restricted by license. When these images are pushed to a registry, restricted artifacts are not included.  This configuration override this behavior for the specified registries.  This option is useful when pushing images containing nondistributable artifacts to a registry on an air-gapped network so hosts on that network can pull the images without connecting to another server.  > **Warning**: Nondistributable artifacts typically have restrictions > on how and where they can be distributed and shared. Only use this > feature to push artifacts to private registries and ensure that you > are in compliance with any terms that cover redistributing > nondistributable artifacts.
     #[serde(rename = "AllowNondistributableArtifactsHostnames")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub allow_nondistributable_artifacts_hostnames: Option<Vec<String>>,
 
-    /// List of IP ranges of insecure registries, using the CIDR syntax ([RFC 4632](https://tools.ietf.org/html/4632)). Insecure registries accept un-encrypted (HTTP) and/or untrusted (HTTPS with certificates from unknown CAs) communication.  By default, local registries (`127.0.0.0/8`) are configured as insecure. All other registries are secure. Communicating with an insecure registry is not possible if the daemon assumes that registry is secure.  This configuration override this behavior, insecure communication with registries whose resolved IP address is within the subnet described by the CIDR syntax.  Registries can also be marked insecure by hostname. Those registries are listed under `IndexConfigs` and have their `Secure` field set to `false`.  > **Warning**: Using this option can be useful when running a local > registry, but introduces security vulnerabilities. This option > should therefore ONLY be used for testing purposes. For increased > security, users should add their CA to their system's list of trusted > CAs instead of enabling this option. 
+    /// List of IP ranges of insecure registries, using the CIDR syntax ([RFC 4632](https://tools.ietf.org/html/4632)). Insecure registries accept un-encrypted (HTTP) and/or untrusted (HTTPS with certificates from unknown CAs) communication.  By default, local registries (`127.0.0.0/8`) are configured as insecure. All other registries are secure. Communicating with an insecure registry is not possible if the daemon assumes that registry is secure.  This configuration override this behavior, insecure communication with registries whose resolved IP address is within the subnet described by the CIDR syntax.  Registries can also be marked insecure by hostname. Those registries are listed under `IndexConfigs` and have their `Secure` field set to `false`.  > **Warning**: Using this option can be useful when running a local > registry, but introduces security vulnerabilities. This option > should therefore ONLY be used for testing purposes. For increased > security, users should add their CA to their system's list of trusted > CAs instead of enabling this option.
     #[serde(rename = "InsecureRegistryCIDRs")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub insecure_registry_cidrs: Option<Vec<String>>,
@@ -4797,14 +4753,13 @@ pub struct RegistryServiceConfig {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub index_configs: Option<HashMap<String, IndexInfo>>,
 
-    /// List of registry URLs that act as a mirror for the official (`docker.io`) registry. 
+    /// List of registry URLs that act as a mirror for the official (`docker.io`) registry.
     #[serde(rename = "Mirrors")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub mirrors: Option<Vec<String>>,
-
 }
 
-/// An object describing the resources which can be advertised by a node and requested by a task. 
+/// An object describing the resources which can be advertised by a node and requested by a task.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct ResourceObject {
     #[serde(rename = "NanoCPUs")]
@@ -4818,13 +4773,12 @@ pub struct ResourceObject {
     #[serde(rename = "GenericResources")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub generic_resources: Option<GenericResources>,
-
 }
 
 /// A container's resources (cgroups config, ulimits, etc)
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct Resources {
-    /// An integer value representing this container's relative CPU weight versus other containers. 
+    /// An integer value representing this container's relative CPU weight versus other containers.
     #[serde(rename = "CpuShares")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub cpu_shares: Option<i64>,
@@ -4834,7 +4788,7 @@ pub struct Resources {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub memory: Option<i64>,
 
-    /// Path to `cgroups` under which the container's `cgroup` is created. If the path is not absolute, the path is considered to be relative to the `cgroups` path of the init process. Cgroups are created if they do not already exist. 
+    /// Path to `cgroups` under which the container's `cgroup` is created. If the path is not absolute, the path is considered to be relative to the `cgroups` path of the init process. Cgroups are created if they do not already exist.
     #[serde(rename = "CgroupParent")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub cgroup_parent: Option<String>,
@@ -4844,27 +4798,27 @@ pub struct Resources {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub blkio_weight: Option<u16>,
 
-    /// Block IO weight (relative device weight) in the form:  ``` [{\"Path\": \"device_path\", \"Weight\": weight}] ``` 
+    /// Block IO weight (relative device weight) in the form:  ``` [{\"Path\": \"device_path\", \"Weight\": weight}] ```
     #[serde(rename = "BlkioWeightDevice")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub blkio_weight_device: Option<Vec<ResourcesBlkioWeightDevice>>,
 
-    /// Limit read rate (bytes per second) from a device, in the form:  ``` [{\"Path\": \"device_path\", \"Rate\": rate}] ``` 
+    /// Limit read rate (bytes per second) from a device, in the form:  ``` [{\"Path\": \"device_path\", \"Rate\": rate}] ```
     #[serde(rename = "BlkioDeviceReadBps")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub blkio_device_read_bps: Option<Vec<ThrottleDevice>>,
 
-    /// Limit write rate (bytes per second) to a device, in the form:  ``` [{\"Path\": \"device_path\", \"Rate\": rate}] ``` 
+    /// Limit write rate (bytes per second) to a device, in the form:  ``` [{\"Path\": \"device_path\", \"Rate\": rate}] ```
     #[serde(rename = "BlkioDeviceWriteBps")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub blkio_device_write_bps: Option<Vec<ThrottleDevice>>,
 
-    /// Limit read rate (IO per second) from a device, in the form:  ``` [{\"Path\": \"device_path\", \"Rate\": rate}] ``` 
+    /// Limit read rate (IO per second) from a device, in the form:  ``` [{\"Path\": \"device_path\", \"Rate\": rate}] ```
     #[serde(rename = "BlkioDeviceReadIOps")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub blkio_device_read_iops: Option<Vec<ThrottleDevice>>,
 
-    /// Limit write rate (IO per second) to a device, in the form:  ``` [{\"Path\": \"device_path\", \"Rate\": rate}] ``` 
+    /// Limit write rate (IO per second) to a device, in the form:  ``` [{\"Path\": \"device_path\", \"Rate\": rate}] ```
     #[serde(rename = "BlkioDeviceWriteIOps")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub blkio_device_write_iops: Option<Vec<ThrottleDevice>>,
@@ -4874,27 +4828,27 @@ pub struct Resources {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub cpu_period: Option<i64>,
 
-    /// Microseconds of CPU time that the container can get in a CPU period. 
+    /// Microseconds of CPU time that the container can get in a CPU period.
     #[serde(rename = "CpuQuota")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub cpu_quota: Option<i64>,
 
-    /// The length of a CPU real-time period in microseconds. Set to 0 to allocate no time allocated to real-time tasks. 
+    /// The length of a CPU real-time period in microseconds. Set to 0 to allocate no time allocated to real-time tasks.
     #[serde(rename = "CpuRealtimePeriod")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub cpu_realtime_period: Option<i64>,
 
-    /// The length of a CPU real-time runtime in microseconds. Set to 0 to allocate no time allocated to real-time tasks. 
+    /// The length of a CPU real-time runtime in microseconds. Set to 0 to allocate no time allocated to real-time tasks.
     #[serde(rename = "CpuRealtimeRuntime")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub cpu_realtime_runtime: Option<i64>,
 
-    /// CPUs in which to allow execution (e.g., `0-3`, `0,1`). 
+    /// CPUs in which to allow execution (e.g., `0-3`, `0,1`).
     #[serde(rename = "CpusetCpus")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub cpuset_cpus: Option<String>,
 
-    /// Memory nodes (MEMs) in which to allow execution (0-3, 0,1). Only effective on NUMA systems. 
+    /// Memory nodes (MEMs) in which to allow execution (0-3, 0,1). Only effective on NUMA systems.
     #[serde(rename = "CpusetMems")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub cpuset_mems: Option<String>,
@@ -4909,12 +4863,12 @@ pub struct Resources {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub device_cgroup_rules: Option<Vec<String>>,
 
-    /// A list of requests for devices to be sent to device drivers. 
+    /// A list of requests for devices to be sent to device drivers.
     #[serde(rename = "DeviceRequests")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub device_requests: Option<Vec<DeviceRequest>>,
 
-    /// Hard limit for kernel TCP buffer memory (in bytes). Depending on the OCI runtime in use, this option may be ignored. It is no longer supported by the default (runc) runtime.  This field is omitted when empty. 
+    /// Hard limit for kernel TCP buffer memory (in bytes). Depending on the OCI runtime in use, this option may be ignored. It is no longer supported by the default (runc) runtime.  This field is omitted when empty.
     #[serde(rename = "KernelMemoryTCP")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub kernel_memory_tcp: Option<i64>,
@@ -4924,12 +4878,12 @@ pub struct Resources {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub memory_reservation: Option<i64>,
 
-    /// Total memory limit (memory + swap). Set as `-1` to enable unlimited swap. 
+    /// Total memory limit (memory + swap). Set as `-1` to enable unlimited swap.
     #[serde(rename = "MemorySwap")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub memory_swap: Option<i64>,
 
-    /// Tune a container's memory swappiness behavior. Accepts an integer between 0 and 100. 
+    /// Tune a container's memory swappiness behavior. Accepts an integer between 0 and 100.
     #[serde(rename = "MemorySwappiness")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub memory_swappiness: Option<i64>,
@@ -4944,27 +4898,27 @@ pub struct Resources {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub oom_kill_disable: Option<bool>,
 
-    /// Run an init inside the container that forwards signals and reaps processes. This field is omitted if empty, and the default (as configured on the daemon) is used. 
+    /// Run an init inside the container that forwards signals and reaps processes. This field is omitted if empty, and the default (as configured on the daemon) is used.
     #[serde(rename = "Init")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub init: Option<bool>,
 
-    /// Tune a container's PIDs limit. Set `0` or `-1` for unlimited, or `null` to not change. 
+    /// Tune a container's PIDs limit. Set `0` or `-1` for unlimited, or `null` to not change.
     #[serde(rename = "PidsLimit")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pids_limit: Option<i64>,
 
-    /// A list of resource limits to set in the container. For example:  ``` {\"Name\": \"nofile\", \"Soft\": 1024, \"Hard\": 2048} ``` 
+    /// A list of resource limits to set in the container. For example:  ``` {\"Name\": \"nofile\", \"Soft\": 1024, \"Hard\": 2048} ```
     #[serde(rename = "Ulimits")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub ulimits: Option<Vec<ResourcesUlimits>>,
 
-    /// The number of usable CPUs (Windows only).  On Windows Server containers, the processor resource controls are mutually exclusive. The order of precedence is `CPUCount` first, then `CPUShares`, and `CPUPercent` last. 
+    /// The number of usable CPUs (Windows only).  On Windows Server containers, the processor resource controls are mutually exclusive. The order of precedence is `CPUCount` first, then `CPUShares`, and `CPUPercent` last.
     #[serde(rename = "CpuCount")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub cpu_count: Option<i64>,
 
-    /// The usable percentage of the available CPUs (Windows only).  On Windows Server containers, the processor resource controls are mutually exclusive. The order of precedence is `CPUCount` first, then `CPUShares`, and `CPUPercent` last. 
+    /// The usable percentage of the available CPUs (Windows only).  On Windows Server containers, the processor resource controls are mutually exclusive. The order of precedence is `CPUCount` first, then `CPUShares`, and `CPUPercent` last.
     #[serde(rename = "CpuPercent")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub cpu_percent: Option<i64>,
@@ -4974,11 +4928,10 @@ pub struct Resources {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub io_maximum_iops: Option<i64>,
 
-    /// Maximum IO in bytes per second for the container system drive (Windows only). 
+    /// Maximum IO in bytes per second for the container system drive (Windows only).
     #[serde(rename = "IOMaximumBandwidth")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub io_maximum_bandwidth: Option<i64>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -4990,7 +4943,6 @@ pub struct ResourcesBlkioWeightDevice {
     #[serde(rename = "Weight")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub weight: Option<usize>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -5009,27 +4961,25 @@ pub struct ResourcesUlimits {
     #[serde(rename = "Hard")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub hard: Option<i64>,
-
 }
 
-/// The behavior to apply when the container exits. The default is not to restart.  An ever increasing delay (double the previous delay, starting at 100ms) is added before each restart to prevent flooding the server. 
+/// The behavior to apply when the container exits. The default is not to restart.  An ever increasing delay (double the previous delay, starting at 100ms) is added before each restart to prevent flooding the server.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct RestartPolicy {
-    /// - Empty string means not to restart - `no` Do not automatically restart - `always` Always restart - `unless-stopped` Restart always except when the user has manually stopped the container - `on-failure` Restart only when the container exit code is non-zero 
+    /// - Empty string means not to restart - `no` Do not automatically restart - `always` Always restart - `unless-stopped` Restart always except when the user has manually stopped the container - `on-failure` Restart only when the container exit code is non-zero
     #[serde(rename = "Name")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<RestartPolicyNameEnum>,
 
-    /// If `on-failure` is used, the number of times to retry before giving up. 
+    /// If `on-failure` is used, the number of times to retry before giving up.
     #[serde(rename = "MaximumRetryCount")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub maximum_retry_count: Option<i64>,
-
 }
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, Eq, Ord)]
-pub enum RestartPolicyNameEnum { 
+pub enum RestartPolicyNameEnum {
     #[serde(rename = "")]
     EMPTY,
     #[serde(rename = "no")]
@@ -5044,13 +4994,12 @@ pub enum RestartPolicyNameEnum {
 
 impl ::std::fmt::Display for RestartPolicyNameEnum {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        match *self { 
+        match *self {
             RestartPolicyNameEnum::EMPTY => write!(f, "{}", ""),
             RestartPolicyNameEnum::NO => write!(f, "{}", "no"),
             RestartPolicyNameEnum::ALWAYS => write!(f, "{}", "always"),
             RestartPolicyNameEnum::UNLESS_STOPPED => write!(f, "{}", "unless-stopped"),
             RestartPolicyNameEnum::ON_FAILURE => write!(f, "{}", "on-failure"),
-
         }
     }
 }
@@ -5058,7 +5007,7 @@ impl ::std::fmt::Display for RestartPolicyNameEnum {
 impl ::std::str::FromStr for RestartPolicyNameEnum {
     type Err = String;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s { 
+        match s {
             "" => Ok(RestartPolicyNameEnum::EMPTY),
             "no" => Ok(RestartPolicyNameEnum::NO),
             "always" => Ok(RestartPolicyNameEnum::ALWAYS),
@@ -5071,7 +5020,7 @@ impl ::std::str::FromStr for RestartPolicyNameEnum {
 
 impl ::std::convert::AsRef<str> for RestartPolicyNameEnum {
     fn as_ref(&self) -> &str {
-        match self { 
+        match self {
             RestartPolicyNameEnum::EMPTY => "",
             RestartPolicyNameEnum::NO => "no",
             RestartPolicyNameEnum::ALWAYS => "always",
@@ -5081,19 +5030,18 @@ impl ::std::convert::AsRef<str> for RestartPolicyNameEnum {
     }
 }
 
-/// Runtime describes an [OCI compliant](https://github.com/opencontainers/runtime-spec) runtime.  The runtime is invoked by the daemon via the `containerd` daemon. OCI runtimes act as an interface to the Linux kernel namespaces, cgroups, and SELinux. 
+/// Runtime describes an [OCI compliant](https://github.com/opencontainers/runtime-spec) runtime.  The runtime is invoked by the daemon via the `containerd` daemon. OCI runtimes act as an interface to the Linux kernel namespaces, cgroups, and SELinux.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct Runtime {
-    /// Name and, optional, path, of the OCI executable binary.  If the path is omitted, the daemon searches the host's `$PATH` for the binary and uses the first result. 
+    /// Name and, optional, path, of the OCI executable binary.  If the path is omitted, the daemon searches the host's `$PATH` for the binary and uses the first result.
     #[serde(rename = "path")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
 
-    /// List of command-line arguments to pass to the runtime when invoked. 
+    /// List of command-line arguments to pass to the runtime when invoked.
     #[serde(rename = "runtimeArgs")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub runtime_args: Option<Vec<String>>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -5127,7 +5075,6 @@ pub struct Secret {
     #[serde(rename = "Spec")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub spec: Option<SecretSpec>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -5142,21 +5089,20 @@ pub struct SecretSpec {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub labels: Option<HashMap<String, String>>,
 
-    /// Base64-url-safe-encoded ([RFC 4648](https://tools.ietf.org/html/rfc4648#section-5)) data to store as secret.  This field is only used to _create_ a secret, and is not returned by other endpoints. 
+    /// Base64-url-safe-encoded ([RFC 4648](https://tools.ietf.org/html/rfc4648#section-5)) data to store as secret.  This field is only used to _create_ a secret, and is not returned by other endpoints.
     #[serde(rename = "Data")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub data: Option<String>,
 
-    /// Name of the secrets driver used to fetch the secret's value from an external secret store. 
+    /// Name of the secrets driver used to fetch the secret's value from an external secret store.
     #[serde(rename = "Driver")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub driver: Option<Driver>,
 
-    /// Templating driver, if applicable  Templating controls whether and how to evaluate the config payload as a template. If no driver is set, no templating is used. 
+    /// Templating driver, if applicable  Templating controls whether and how to evaluate the config payload as a template. If no driver is set, no templating is used.
     #[serde(rename = "Templating")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub templating: Option<Driver>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -5206,7 +5152,6 @@ pub struct Service {
     #[serde(rename = "JobStatus")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub job_status: Option<ServiceJobStatus>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -5220,7 +5165,6 @@ pub struct ServiceCreateResponse {
     #[serde(rename = "Warning")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub warning: Option<String>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -5236,7 +5180,6 @@ pub struct ServiceEndpoint {
     #[serde(rename = "VirtualIPs")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub virtual_ips: Option<Vec<ServiceEndpointVirtualIps>>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -5248,18 +5191,17 @@ pub struct ServiceEndpointVirtualIps {
     #[serde(rename = "Addr")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub addr: Option<String>,
-
 }
 
-/// The status of the service when it is in one of ReplicatedJob or GlobalJob modes. Absent on Replicated and Global mode services. The JobIteration is an ObjectVersion, but unlike the Service's version, does not need to be sent with an update request. 
+/// The status of the service when it is in one of ReplicatedJob or GlobalJob modes. Absent on Replicated and Global mode services. The JobIteration is an ObjectVersion, but unlike the Service's version, does not need to be sent with an update request.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct ServiceJobStatus {
-    /// JobIteration is a value increased each time a Job is executed, successfully or otherwise. \"Executed\", in this case, means the job as a whole has been started, not that an individual Task has been launched. A job is \"Executed\" when its ServiceSpec is updated. JobIteration can be used to disambiguate Tasks belonging to different executions of a job.  Though JobIteration will increase with each subsequent execution, it may not necessarily increase by 1, and so JobIteration should not be used to 
+    /// JobIteration is a value increased each time a Job is executed, successfully or otherwise. \"Executed\", in this case, means the job as a whole has been started, not that an individual Task has been launched. A job is \"Executed\" when its ServiceSpec is updated. JobIteration can be used to disambiguate Tasks belonging to different executions of a job.  Though JobIteration will increase with each subsequent execution, it may not necessarily increase by 1, and so JobIteration should not be used to
     #[serde(rename = "JobIteration")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub job_iteration: Option<ObjectVersion>,
 
-    /// The last time, as observed by the server, that this job was started. 
+    /// The last time, as observed by the server, that this job was started.
     #[serde(rename = "LastExecution")]
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(
@@ -5268,27 +5210,25 @@ pub struct ServiceJobStatus {
         serialize_with = "serialize_timestamp"
     )]
     pub last_execution: Option<BollardDate>,
-
 }
 
-/// The status of the service's tasks. Provided only when requested as part of a ServiceList operation. 
+/// The status of the service's tasks. Provided only when requested as part of a ServiceList operation.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct ServiceServiceStatus {
-    /// The number of tasks for the service currently in the Running state. 
+    /// The number of tasks for the service currently in the Running state.
     #[serde(rename = "RunningTasks")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub running_tasks: Option<u64>,
 
-    /// The number of tasks for the service desired to be running. For replicated services, this is the replica count from the service spec. For global services, this is computed by taking count of all tasks for the service with a Desired State other than Shutdown. 
+    /// The number of tasks for the service desired to be running. For replicated services, this is the replica count from the service spec. For global services, this is computed by taking count of all tasks for the service with a Desired State other than Shutdown.
     #[serde(rename = "DesiredTasks")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub desired_tasks: Option<u64>,
 
-    /// The number of tasks for a job that are in the Completed state. This field must be cross-referenced with the service type, as the value of 0 may mean the service is not in a job mode, or it may mean the job-mode service has no tasks yet Completed. 
+    /// The number of tasks for a job that are in the Completed state. This field must be cross-referenced with the service type, as the value of 0 may mean the service is not in a job mode, or it may mean the job-mode service has no tasks yet Completed.
     #[serde(rename = "CompletedTasks")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub completed_tasks: Option<u64>,
-
 }
 
 /// User modifiable configuration for a service.
@@ -5328,7 +5268,6 @@ pub struct ServiceSpec {
     #[serde(rename = "EndpointSpec")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub endpoint_spec: Option<EndpointSpec>,
-
 }
 
 /// Scheduling mode for the service.
@@ -5346,11 +5285,10 @@ pub struct ServiceSpecMode {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub replicated_job: Option<ServiceSpecModeReplicatedJob>,
 
-    /// The mode used for services which run a task to the completed state on each valid node. 
+    /// The mode used for services which run a task to the completed state on each valid node.
     #[serde(rename = "GlobalJob")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub global_job: Option<HashMap<(), ()>>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -5358,62 +5296,59 @@ pub struct ServiceSpecModeReplicated {
     #[serde(rename = "Replicas")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub replicas: Option<i64>,
-
 }
 
-/// The mode used for services with a finite number of tasks that run to a completed state. 
+/// The mode used for services with a finite number of tasks that run to a completed state.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct ServiceSpecModeReplicatedJob {
-    /// The maximum number of replicas to run simultaneously. 
+    /// The maximum number of replicas to run simultaneously.
     #[serde(rename = "MaxConcurrent")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub max_concurrent: Option<i64>,
 
-    /// The total number of replicas desired to reach the Completed state. If unset, will default to the value of `MaxConcurrent` 
+    /// The total number of replicas desired to reach the Completed state. If unset, will default to the value of `MaxConcurrent`
     #[serde(rename = "TotalCompletions")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub total_completions: Option<i64>,
-
 }
 
 /// Specification for the rollback strategy of the service.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct ServiceSpecRollbackConfig {
-    /// Maximum number of tasks to be rolled back in one iteration (0 means unlimited parallelism). 
+    /// Maximum number of tasks to be rolled back in one iteration (0 means unlimited parallelism).
     #[serde(rename = "Parallelism")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub parallelism: Option<i64>,
 
-    /// Amount of time between rollback iterations, in nanoseconds. 
+    /// Amount of time between rollback iterations, in nanoseconds.
     #[serde(rename = "Delay")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub delay: Option<i64>,
 
-    /// Action to take if an rolled back task fails to run, or stops running during the rollback. 
+    /// Action to take if an rolled back task fails to run, or stops running during the rollback.
     #[serde(rename = "FailureAction")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub failure_action: Option<ServiceSpecRollbackConfigFailureActionEnum>,
 
-    /// Amount of time to monitor each rolled back task for failures, in nanoseconds. 
+    /// Amount of time to monitor each rolled back task for failures, in nanoseconds.
     #[serde(rename = "Monitor")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub monitor: Option<i64>,
 
-    /// The fraction of tasks that may fail during a rollback before the failure action is invoked, specified as a floating point number between 0 and 1. 
+    /// The fraction of tasks that may fail during a rollback before the failure action is invoked, specified as a floating point number between 0 and 1.
     #[serde(rename = "MaxFailureRatio")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub max_failure_ratio: Option<f64>,
 
-    /// The order of operations when rolling back a task. Either the old task is shut down before the new task is started, or the new task is started before the old task is shut down. 
+    /// The order of operations when rolling back a task. Either the old task is shut down before the new task is started, or the new task is started before the old task is shut down.
     #[serde(rename = "Order")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub order: Option<ServiceSpecRollbackConfigOrderEnum>,
-
 }
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, Eq, Ord)]
-pub enum ServiceSpecRollbackConfigFailureActionEnum { 
+pub enum ServiceSpecRollbackConfigFailureActionEnum {
     #[serde(rename = "")]
     EMPTY,
     #[serde(rename = "continue")]
@@ -5424,11 +5359,10 @@ pub enum ServiceSpecRollbackConfigFailureActionEnum {
 
 impl ::std::fmt::Display for ServiceSpecRollbackConfigFailureActionEnum {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        match *self { 
+        match *self {
             ServiceSpecRollbackConfigFailureActionEnum::EMPTY => write!(f, ""),
             ServiceSpecRollbackConfigFailureActionEnum::CONTINUE => write!(f, "{}", "continue"),
             ServiceSpecRollbackConfigFailureActionEnum::PAUSE => write!(f, "{}", "pause"),
-
         }
     }
 }
@@ -5436,7 +5370,7 @@ impl ::std::fmt::Display for ServiceSpecRollbackConfigFailureActionEnum {
 impl ::std::str::FromStr for ServiceSpecRollbackConfigFailureActionEnum {
     type Err = String;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s { 
+        match s {
             "" => Ok(ServiceSpecRollbackConfigFailureActionEnum::EMPTY),
             "continue" => Ok(ServiceSpecRollbackConfigFailureActionEnum::CONTINUE),
             "pause" => Ok(ServiceSpecRollbackConfigFailureActionEnum::PAUSE),
@@ -5447,7 +5381,7 @@ impl ::std::str::FromStr for ServiceSpecRollbackConfigFailureActionEnum {
 
 impl ::std::convert::AsRef<str> for ServiceSpecRollbackConfigFailureActionEnum {
     fn as_ref(&self) -> &str {
-        match self { 
+        match self {
             ServiceSpecRollbackConfigFailureActionEnum::EMPTY => "",
             ServiceSpecRollbackConfigFailureActionEnum::CONTINUE => "continue",
             ServiceSpecRollbackConfigFailureActionEnum::PAUSE => "pause",
@@ -5457,7 +5391,7 @@ impl ::std::convert::AsRef<str> for ServiceSpecRollbackConfigFailureActionEnum {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, Eq, Ord)]
-pub enum ServiceSpecRollbackConfigOrderEnum { 
+pub enum ServiceSpecRollbackConfigOrderEnum {
     #[serde(rename = "")]
     EMPTY,
     #[serde(rename = "stop-first")]
@@ -5468,11 +5402,10 @@ pub enum ServiceSpecRollbackConfigOrderEnum {
 
 impl ::std::fmt::Display for ServiceSpecRollbackConfigOrderEnum {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        match *self { 
+        match *self {
             ServiceSpecRollbackConfigOrderEnum::EMPTY => write!(f, ""),
             ServiceSpecRollbackConfigOrderEnum::STOP_FIRST => write!(f, "{}", "stop-first"),
             ServiceSpecRollbackConfigOrderEnum::START_FIRST => write!(f, "{}", "start-first"),
-
         }
     }
 }
@@ -5480,7 +5413,7 @@ impl ::std::fmt::Display for ServiceSpecRollbackConfigOrderEnum {
 impl ::std::str::FromStr for ServiceSpecRollbackConfigOrderEnum {
     type Err = String;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s { 
+        match s {
             "" => Ok(ServiceSpecRollbackConfigOrderEnum::EMPTY),
             "stop-first" => Ok(ServiceSpecRollbackConfigOrderEnum::STOP_FIRST),
             "start-first" => Ok(ServiceSpecRollbackConfigOrderEnum::START_FIRST),
@@ -5491,7 +5424,7 @@ impl ::std::str::FromStr for ServiceSpecRollbackConfigOrderEnum {
 
 impl ::std::convert::AsRef<str> for ServiceSpecRollbackConfigOrderEnum {
     fn as_ref(&self) -> &str {
-        match self { 
+        match self {
             ServiceSpecRollbackConfigOrderEnum::EMPTY => "",
             ServiceSpecRollbackConfigOrderEnum::STOP_FIRST => "stop-first",
             ServiceSpecRollbackConfigOrderEnum::START_FIRST => "start-first",
@@ -5502,7 +5435,7 @@ impl ::std::convert::AsRef<str> for ServiceSpecRollbackConfigOrderEnum {
 /// Specification for the update strategy of the service.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct ServiceSpecUpdateConfig {
-    /// Maximum number of tasks to be updated in one iteration (0 means unlimited parallelism). 
+    /// Maximum number of tasks to be updated in one iteration (0 means unlimited parallelism).
     #[serde(rename = "Parallelism")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub parallelism: Option<i64>,
@@ -5512,31 +5445,30 @@ pub struct ServiceSpecUpdateConfig {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub delay: Option<i64>,
 
-    /// Action to take if an updated task fails to run, or stops running during the update. 
+    /// Action to take if an updated task fails to run, or stops running during the update.
     #[serde(rename = "FailureAction")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub failure_action: Option<ServiceSpecUpdateConfigFailureActionEnum>,
 
-    /// Amount of time to monitor each updated task for failures, in nanoseconds. 
+    /// Amount of time to monitor each updated task for failures, in nanoseconds.
     #[serde(rename = "Monitor")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub monitor: Option<i64>,
 
-    /// The fraction of tasks that may fail during an update before the failure action is invoked, specified as a floating point number between 0 and 1. 
+    /// The fraction of tasks that may fail during an update before the failure action is invoked, specified as a floating point number between 0 and 1.
     #[serde(rename = "MaxFailureRatio")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub max_failure_ratio: Option<f64>,
 
-    /// The order of operations when rolling out an updated task. Either the old task is shut down before the new task is started, or the new task is started before the old task is shut down. 
+    /// The order of operations when rolling out an updated task. Either the old task is shut down before the new task is started, or the new task is started before the old task is shut down.
     #[serde(rename = "Order")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub order: Option<ServiceSpecUpdateConfigOrderEnum>,
-
 }
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, Eq, Ord)]
-pub enum ServiceSpecUpdateConfigFailureActionEnum { 
+pub enum ServiceSpecUpdateConfigFailureActionEnum {
     #[serde(rename = "")]
     EMPTY,
     #[serde(rename = "continue")]
@@ -5549,12 +5481,11 @@ pub enum ServiceSpecUpdateConfigFailureActionEnum {
 
 impl ::std::fmt::Display for ServiceSpecUpdateConfigFailureActionEnum {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        match *self { 
+        match *self {
             ServiceSpecUpdateConfigFailureActionEnum::EMPTY => write!(f, ""),
             ServiceSpecUpdateConfigFailureActionEnum::CONTINUE => write!(f, "{}", "continue"),
             ServiceSpecUpdateConfigFailureActionEnum::PAUSE => write!(f, "{}", "pause"),
             ServiceSpecUpdateConfigFailureActionEnum::ROLLBACK => write!(f, "{}", "rollback"),
-
         }
     }
 }
@@ -5562,7 +5493,7 @@ impl ::std::fmt::Display for ServiceSpecUpdateConfigFailureActionEnum {
 impl ::std::str::FromStr for ServiceSpecUpdateConfigFailureActionEnum {
     type Err = String;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s { 
+        match s {
             "" => Ok(ServiceSpecUpdateConfigFailureActionEnum::EMPTY),
             "continue" => Ok(ServiceSpecUpdateConfigFailureActionEnum::CONTINUE),
             "pause" => Ok(ServiceSpecUpdateConfigFailureActionEnum::PAUSE),
@@ -5574,7 +5505,7 @@ impl ::std::str::FromStr for ServiceSpecUpdateConfigFailureActionEnum {
 
 impl ::std::convert::AsRef<str> for ServiceSpecUpdateConfigFailureActionEnum {
     fn as_ref(&self) -> &str {
-        match self { 
+        match self {
             ServiceSpecUpdateConfigFailureActionEnum::EMPTY => "",
             ServiceSpecUpdateConfigFailureActionEnum::CONTINUE => "continue",
             ServiceSpecUpdateConfigFailureActionEnum::PAUSE => "pause",
@@ -5585,7 +5516,7 @@ impl ::std::convert::AsRef<str> for ServiceSpecUpdateConfigFailureActionEnum {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, Eq, Ord)]
-pub enum ServiceSpecUpdateConfigOrderEnum { 
+pub enum ServiceSpecUpdateConfigOrderEnum {
     #[serde(rename = "")]
     EMPTY,
     #[serde(rename = "stop-first")]
@@ -5596,11 +5527,10 @@ pub enum ServiceSpecUpdateConfigOrderEnum {
 
 impl ::std::fmt::Display for ServiceSpecUpdateConfigOrderEnum {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        match *self { 
+        match *self {
             ServiceSpecUpdateConfigOrderEnum::EMPTY => write!(f, ""),
             ServiceSpecUpdateConfigOrderEnum::STOP_FIRST => write!(f, "{}", "stop-first"),
             ServiceSpecUpdateConfigOrderEnum::START_FIRST => write!(f, "{}", "start-first"),
-
         }
     }
 }
@@ -5608,7 +5538,7 @@ impl ::std::fmt::Display for ServiceSpecUpdateConfigOrderEnum {
 impl ::std::str::FromStr for ServiceSpecUpdateConfigOrderEnum {
     type Err = String;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s { 
+        match s {
             "" => Ok(ServiceSpecUpdateConfigOrderEnum::EMPTY),
             "stop-first" => Ok(ServiceSpecUpdateConfigOrderEnum::STOP_FIRST),
             "start-first" => Ok(ServiceSpecUpdateConfigOrderEnum::START_FIRST),
@@ -5619,7 +5549,7 @@ impl ::std::str::FromStr for ServiceSpecUpdateConfigOrderEnum {
 
 impl ::std::convert::AsRef<str> for ServiceSpecUpdateConfigOrderEnum {
     fn as_ref(&self) -> &str {
-        match self { 
+        match self {
             ServiceSpecUpdateConfigOrderEnum::EMPTY => "",
             ServiceSpecUpdateConfigOrderEnum::STOP_FIRST => "stop-first",
             ServiceSpecUpdateConfigOrderEnum::START_FIRST => "start-first",
@@ -5633,7 +5563,6 @@ pub struct ServiceUpdateResponse {
     #[serde(rename = "Warnings")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub warnings: Option<Vec<String>>,
-
 }
 
 /// The status of a service update.
@@ -5664,12 +5593,11 @@ pub struct ServiceUpdateStatus {
     #[serde(rename = "Message")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub message: Option<String>,
-
 }
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, Eq, Ord)]
-pub enum ServiceUpdateStatusStateEnum { 
+pub enum ServiceUpdateStatusStateEnum {
     #[serde(rename = "")]
     EMPTY,
     #[serde(rename = "updating")]
@@ -5688,15 +5616,16 @@ pub enum ServiceUpdateStatusStateEnum {
 
 impl ::std::fmt::Display for ServiceUpdateStatusStateEnum {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        match *self { 
+        match *self {
             ServiceUpdateStatusStateEnum::EMPTY => write!(f, ""),
             ServiceUpdateStatusStateEnum::UPDATING => write!(f, "{}", "updating"),
             ServiceUpdateStatusStateEnum::PAUSED => write!(f, "{}", "paused"),
             ServiceUpdateStatusStateEnum::COMPLETED => write!(f, "{}", "completed"),
             ServiceUpdateStatusStateEnum::ROLLBACK_STARTED => write!(f, "{}", "rollback_started"),
             ServiceUpdateStatusStateEnum::ROLLBACK_PAUSED => write!(f, "{}", "rollback_paused"),
-            ServiceUpdateStatusStateEnum::ROLLBACK_COMPLETED => write!(f, "{}", "rollback_completed"),
-
+            ServiceUpdateStatusStateEnum::ROLLBACK_COMPLETED => {
+                write!(f, "{}", "rollback_completed")
+            }
         }
     }
 }
@@ -5704,7 +5633,7 @@ impl ::std::fmt::Display for ServiceUpdateStatusStateEnum {
 impl ::std::str::FromStr for ServiceUpdateStatusStateEnum {
     type Err = String;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s { 
+        match s {
             "" => Ok(ServiceUpdateStatusStateEnum::EMPTY),
             "updating" => Ok(ServiceUpdateStatusStateEnum::UPDATING),
             "paused" => Ok(ServiceUpdateStatusStateEnum::PAUSED),
@@ -5719,7 +5648,7 @@ impl ::std::str::FromStr for ServiceUpdateStatusStateEnum {
 
 impl ::std::convert::AsRef<str> for ServiceUpdateStatusStateEnum {
     fn as_ref(&self) -> &str {
-        match self { 
+        match self {
             ServiceUpdateStatusStateEnum::EMPTY => "",
             ServiceUpdateStatusStateEnum::UPDATING => "updating",
             ServiceUpdateStatusStateEnum::PAUSED => "paused",
@@ -5742,7 +5671,7 @@ pub struct Swarm {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub version: Option<ObjectVersion>,
 
-    /// Date and time at which the swarm was initialised in [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds. 
+    /// Date and time at which the swarm was initialised in [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
     #[serde(rename = "CreatedAt")]
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(
@@ -5752,7 +5681,7 @@ pub struct Swarm {
     )]
     pub created_at: Option<BollardDate>,
 
-    /// Date and time at which the swarm was last updated in [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds. 
+    /// Date and time at which the swarm was last updated in [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
     #[serde(rename = "UpdatedAt")]
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(
@@ -5770,22 +5699,22 @@ pub struct Swarm {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub tls_info: Option<TlsInfo>,
 
-    /// Whether there is currently a root CA rotation in progress for the swarm 
+    /// Whether there is currently a root CA rotation in progress for the swarm
     #[serde(rename = "RootRotationInProgress")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub root_rotation_in_progress: Option<bool>,
 
-    /// DataPathPort specifies the data path port number for data traffic. Acceptable port range is 1024 to 49151. If no port is set or is set to 0, the default port (4789) is used. 
+    /// DataPathPort specifies the data path port number for data traffic. Acceptable port range is 1024 to 49151. If no port is set or is set to 0, the default port (4789) is used.
     #[serde(rename = "DataPathPort")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub data_path_port: Option<u32>,
 
-    /// Default Address Pool specifies default subnet pools for global scope networks. 
+    /// Default Address Pool specifies default subnet pools for global scope networks.
     #[serde(rename = "DefaultAddrPool")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub default_addr_pool: Option<Vec<String>>,
 
-    /// SubnetSize specifies the subnet size of the networks created from the default subnet pool. 
+    /// SubnetSize specifies the subnet size of the networks created from the default subnet pool.
     #[serde(rename = "SubnetSize")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub subnet_size: Option<u32>,
@@ -5793,10 +5722,9 @@ pub struct Swarm {
     #[serde(rename = "JoinTokens")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub join_tokens: Option<JoinTokens>,
-
 }
 
-/// Represents generic information about swarm. 
+/// Represents generic information about swarm.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct SwarmInfo {
     /// Unique identifier of for this node in the swarm.
@@ -5804,7 +5732,7 @@ pub struct SwarmInfo {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub node_id: Option<String>,
 
-    /// IP address at which this node can be reached by other nodes in the swarm. 
+    /// IP address at which this node can be reached by other nodes in the swarm.
     #[serde(rename = "NodeAddr")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub node_addr: Option<String>,
@@ -5821,7 +5749,7 @@ pub struct SwarmInfo {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub error: Option<String>,
 
-    /// List of ID's and addresses of other managers in the swarm. 
+    /// List of ID's and addresses of other managers in the swarm.
     #[serde(rename = "RemoteManagers")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub remote_managers: Option<Vec<PeerNode>>,
@@ -5839,32 +5767,31 @@ pub struct SwarmInfo {
     #[serde(rename = "Cluster")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub cluster: Option<ClusterInfo>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct SwarmInitRequest {
-    /// Listen address used for inter-manager communication, as well as determining the networking interface used for the VXLAN Tunnel Endpoint (VTEP). This can either be an address/port combination in the form `192.168.1.1:4567`, or an interface followed by a port number, like `eth0:4567`. If the port number is omitted, the default swarm listening port is used. 
+    /// Listen address used for inter-manager communication, as well as determining the networking interface used for the VXLAN Tunnel Endpoint (VTEP). This can either be an address/port combination in the form `192.168.1.1:4567`, or an interface followed by a port number, like `eth0:4567`. If the port number is omitted, the default swarm listening port is used.
     #[serde(rename = "ListenAddr")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub listen_addr: Option<String>,
 
-    /// Externally reachable address advertised to other nodes. This can either be an address/port combination in the form `192.168.1.1:4567`, or an interface followed by a port number, like `eth0:4567`. If the port number is omitted, the port number from the listen address is used. If `AdvertiseAddr` is not specified, it will be automatically detected when possible. 
+    /// Externally reachable address advertised to other nodes. This can either be an address/port combination in the form `192.168.1.1:4567`, or an interface followed by a port number, like `eth0:4567`. If the port number is omitted, the port number from the listen address is used. If `AdvertiseAddr` is not specified, it will be automatically detected when possible.
     #[serde(rename = "AdvertiseAddr")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub advertise_addr: Option<String>,
 
-    /// Address or interface to use for data path traffic (format: `<ip|interface>`), for example,  `192.168.1.1`, or an interface, like `eth0`. If `DataPathAddr` is unspecified, the same address as `AdvertiseAddr` is used.  The `DataPathAddr` specifies the address that global scope network drivers will publish towards other  nodes in order to reach the containers running on this node. Using this parameter it is possible to separate the container data traffic from the management traffic of the cluster. 
+    /// Address or interface to use for data path traffic (format: `<ip|interface>`), for example,  `192.168.1.1`, or an interface, like `eth0`. If `DataPathAddr` is unspecified, the same address as `AdvertiseAddr` is used.  The `DataPathAddr` specifies the address that global scope network drivers will publish towards other  nodes in order to reach the containers running on this node. Using this parameter it is possible to separate the container data traffic from the management traffic of the cluster.
     #[serde(rename = "DataPathAddr")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub data_path_addr: Option<String>,
 
-    /// DataPathPort specifies the data path port number for data traffic. Acceptable port range is 1024 to 49151. if no port is set or is set to 0, default port 4789 will be used. 
+    /// DataPathPort specifies the data path port number for data traffic. Acceptable port range is 1024 to 49151. if no port is set or is set to 0, default port 4789 will be used.
     #[serde(rename = "DataPathPort")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub data_path_port: Option<u32>,
 
-    /// Default Address Pool specifies default subnet pools for global scope networks. 
+    /// Default Address Pool specifies default subnet pools for global scope networks.
     #[serde(rename = "DefaultAddrPool")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub default_addr_pool: Option<Vec<String>>,
@@ -5874,7 +5801,7 @@ pub struct SwarmInitRequest {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub force_new_cluster: Option<bool>,
 
-    /// SubnetSize specifies the subnet size of the networks created from the default subnet pool. 
+    /// SubnetSize specifies the subnet size of the networks created from the default subnet pool.
     #[serde(rename = "SubnetSize")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub subnet_size: Option<u32>,
@@ -5882,27 +5809,26 @@ pub struct SwarmInitRequest {
     #[serde(rename = "Spec")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub spec: Option<SwarmSpec>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct SwarmJoinRequest {
-    /// Listen address used for inter-manager communication if the node gets promoted to manager, as well as determining the networking interface used for the VXLAN Tunnel Endpoint (VTEP). 
+    /// Listen address used for inter-manager communication if the node gets promoted to manager, as well as determining the networking interface used for the VXLAN Tunnel Endpoint (VTEP).
     #[serde(rename = "ListenAddr")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub listen_addr: Option<String>,
 
-    /// Externally reachable address advertised to other nodes. This can either be an address/port combination in the form `192.168.1.1:4567`, or an interface followed by a port number, like `eth0:4567`. If the port number is omitted, the port number from the listen address is used. If `AdvertiseAddr` is not specified, it will be automatically detected when possible. 
+    /// Externally reachable address advertised to other nodes. This can either be an address/port combination in the form `192.168.1.1:4567`, or an interface followed by a port number, like `eth0:4567`. If the port number is omitted, the port number from the listen address is used. If `AdvertiseAddr` is not specified, it will be automatically detected when possible.
     #[serde(rename = "AdvertiseAddr")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub advertise_addr: Option<String>,
 
-    /// Address or interface to use for data path traffic (format: `<ip|interface>`), for example,  `192.168.1.1`, or an interface, like `eth0`. If `DataPathAddr` is unspecified, the same address as `AdvertiseAddr` is used.  The `DataPathAddr` specifies the address that global scope network drivers will publish towards other nodes in order to reach the containers running on this node. Using this parameter it is possible to separate the container data traffic from the management traffic of the cluster. 
+    /// Address or interface to use for data path traffic (format: `<ip|interface>`), for example,  `192.168.1.1`, or an interface, like `eth0`. If `DataPathAddr` is unspecified, the same address as `AdvertiseAddr` is used.  The `DataPathAddr` specifies the address that global scope network drivers will publish towards other nodes in order to reach the containers running on this node. Using this parameter it is possible to separate the container data traffic from the management traffic of the cluster.
     #[serde(rename = "DataPathAddr")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub data_path_addr: Option<String>,
 
-    /// Addresses of manager nodes already participating in the swarm. 
+    /// Addresses of manager nodes already participating in the swarm.
     #[serde(rename = "RemoteAddrs")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub remote_addrs: Option<Vec<String>>,
@@ -5911,7 +5837,6 @@ pub struct SwarmJoinRequest {
     #[serde(rename = "JoinToken")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub join_token: Option<String>,
-
 }
 
 /// User modifiable swarm configuration.
@@ -5950,7 +5875,6 @@ pub struct SwarmSpec {
     #[serde(rename = "TaskDefaults")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub task_defaults: Option<SwarmSpecTaskDefaults>,
-
 }
 
 /// CA configuration.
@@ -5961,55 +5885,53 @@ pub struct SwarmSpecCaConfig {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub node_cert_expiry: Option<i64>,
 
-    /// Configuration for forwarding signing requests to an external certificate authority. 
+    /// Configuration for forwarding signing requests to an external certificate authority.
     #[serde(rename = "ExternalCAs")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub external_cas: Option<Vec<SwarmSpecCaConfigExternalCas>>,
 
-    /// The desired signing CA certificate for all swarm node TLS leaf certificates, in PEM format. 
+    /// The desired signing CA certificate for all swarm node TLS leaf certificates, in PEM format.
     #[serde(rename = "SigningCACert")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub signing_ca_cert: Option<String>,
 
-    /// The desired signing CA key for all swarm node TLS leaf certificates, in PEM format. 
+    /// The desired signing CA key for all swarm node TLS leaf certificates, in PEM format.
     #[serde(rename = "SigningCAKey")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub signing_ca_key: Option<String>,
 
-    /// An integer whose purpose is to force swarm to generate a new signing CA certificate and key, if none have been specified in `SigningCACert` and `SigningCAKey` 
+    /// An integer whose purpose is to force swarm to generate a new signing CA certificate and key, if none have been specified in `SigningCACert` and `SigningCAKey`
     #[serde(rename = "ForceRotate")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub force_rotate: Option<u64>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct SwarmSpecCaConfigExternalCas {
-    /// Protocol for communication with the external CA (currently only `cfssl` is supported). 
+    /// Protocol for communication with the external CA (currently only `cfssl` is supported).
     #[serde(rename = "Protocol")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub protocol: Option<SwarmSpecCaConfigExternalCasProtocolEnum>,
 
-    /// URL where certificate signing requests should be sent. 
+    /// URL where certificate signing requests should be sent.
     #[serde(rename = "URL")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub url: Option<String>,
 
-    /// An object with key/value pairs that are interpreted as protocol-specific options for the external CA driver. 
+    /// An object with key/value pairs that are interpreted as protocol-specific options for the external CA driver.
     #[serde(rename = "Options")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub options: Option<HashMap<String, String>>,
 
-    /// The root CA certificate (in PEM format) this external CA uses to issue TLS certificates (assumed to be to the current swarm root CA certificate if not provided). 
+    /// The root CA certificate (in PEM format) this external CA uses to issue TLS certificates (assumed to be to the current swarm root CA certificate if not provided).
     #[serde(rename = "CACert")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub ca_cert: Option<String>,
-
 }
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, Eq, Ord)]
-pub enum SwarmSpecCaConfigExternalCasProtocolEnum { 
+pub enum SwarmSpecCaConfigExternalCasProtocolEnum {
     #[serde(rename = "")]
     EMPTY,
     #[serde(rename = "cfssl")]
@@ -6018,10 +5940,9 @@ pub enum SwarmSpecCaConfigExternalCasProtocolEnum {
 
 impl ::std::fmt::Display for SwarmSpecCaConfigExternalCasProtocolEnum {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        match *self { 
+        match *self {
             SwarmSpecCaConfigExternalCasProtocolEnum::EMPTY => write!(f, ""),
             SwarmSpecCaConfigExternalCasProtocolEnum::CFSSL => write!(f, "{}", "cfssl"),
-
         }
     }
 }
@@ -6029,7 +5950,7 @@ impl ::std::fmt::Display for SwarmSpecCaConfigExternalCasProtocolEnum {
 impl ::std::str::FromStr for SwarmSpecCaConfigExternalCasProtocolEnum {
     type Err = String;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s { 
+        match s {
             "" => Ok(SwarmSpecCaConfigExternalCasProtocolEnum::EMPTY),
             "cfssl" => Ok(SwarmSpecCaConfigExternalCasProtocolEnum::CFSSL),
             x => Err(format!("Invalid enum type: {}", x)),
@@ -6039,7 +5960,7 @@ impl ::std::str::FromStr for SwarmSpecCaConfigExternalCasProtocolEnum {
 
 impl ::std::convert::AsRef<str> for SwarmSpecCaConfigExternalCasProtocolEnum {
     fn as_ref(&self) -> &str {
-        match self { 
+        match self {
             SwarmSpecCaConfigExternalCasProtocolEnum::EMPTY => "",
             SwarmSpecCaConfigExternalCasProtocolEnum::CFSSL => "cfssl",
         }
@@ -6049,31 +5970,28 @@ impl ::std::convert::AsRef<str> for SwarmSpecCaConfigExternalCasProtocolEnum {
 /// Dispatcher configuration.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct SwarmSpecDispatcher {
-    /// The delay for an agent to send a heartbeat to the dispatcher. 
+    /// The delay for an agent to send a heartbeat to the dispatcher.
     #[serde(rename = "HeartbeatPeriod")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub heartbeat_period: Option<i64>,
-
 }
 
 /// Parameters related to encryption-at-rest.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct SwarmSpecEncryptionConfig {
-    /// If set, generate a key and use it to lock data stored on the managers. 
+    /// If set, generate a key and use it to lock data stored on the managers.
     #[serde(rename = "AutoLockManagers")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub auto_lock_managers: Option<bool>,
-
 }
 
 /// Orchestration configuration.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct SwarmSpecOrchestration {
-    /// The number of historic tasks to keep per instance or node. If negative, never remove completed or failed tasks. 
+    /// The number of historic tasks to keep per instance or node. If negative, never remove completed or failed tasks.
     #[serde(rename = "TaskHistoryRetentionLimit")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub task_history_retention_limit: Option<i64>,
-
 }
 
 /// Raft configuration.
@@ -6084,26 +6002,25 @@ pub struct SwarmSpecRaft {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub snapshot_interval: Option<u64>,
 
-    /// The number of snapshots to keep beyond the current snapshot. 
+    /// The number of snapshots to keep beyond the current snapshot.
     #[serde(rename = "KeepOldSnapshots")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub keep_old_snapshots: Option<u64>,
 
-    /// The number of log entries to keep around to sync up slow followers after a snapshot is created. 
+    /// The number of log entries to keep around to sync up slow followers after a snapshot is created.
     #[serde(rename = "LogEntriesForSlowFollowers")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub log_entries_for_slow_followers: Option<u64>,
 
-    /// The number of ticks that a follower will wait for a message from the leader before becoming a candidate and starting an election. `ElectionTick` must be greater than `HeartbeatTick`.  A tick currently defaults to one second, so these translate directly to seconds currently, but this is NOT guaranteed. 
+    /// The number of ticks that a follower will wait for a message from the leader before becoming a candidate and starting an election. `ElectionTick` must be greater than `HeartbeatTick`.  A tick currently defaults to one second, so these translate directly to seconds currently, but this is NOT guaranteed.
     #[serde(rename = "ElectionTick")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub election_tick: Option<i64>,
 
-    /// The number of ticks between heartbeats. Every HeartbeatTick ticks, the leader will send a heartbeat to the followers.  A tick currently defaults to one second, so these translate directly to seconds currently, but this is NOT guaranteed. 
+    /// The number of ticks between heartbeats. Every HeartbeatTick ticks, the leader will send a heartbeat to the followers.  A tick currently defaults to one second, so these translate directly to seconds currently, but this is NOT guaranteed.
     #[serde(rename = "HeartbeatTick")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub heartbeat_tick: Option<i64>,
-
 }
 
 /// Defaults for creating tasks in this cluster.
@@ -6112,22 +6029,20 @@ pub struct SwarmSpecTaskDefaults {
     #[serde(rename = "LogDriver")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub log_driver: Option<SwarmSpecTaskDefaultsLogDriver>,
-
 }
 
-/// The log driver to use for tasks created in the orchestrator if unspecified by a service.  Updating this value only affects new tasks. Existing tasks continue to use their previously configured log driver until recreated. 
+/// The log driver to use for tasks created in the orchestrator if unspecified by a service.  Updating this value only affects new tasks. Existing tasks continue to use their previously configured log driver until recreated.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct SwarmSpecTaskDefaultsLogDriver {
-    /// The log driver to use as a default for new tasks. 
+    /// The log driver to use as a default for new tasks.
     #[serde(rename = "Name")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
-    /// Driver-specific options for the selectd log driver, specified as key/value pairs. 
+    /// Driver-specific options for the selectd log driver, specified as key/value pairs.
     #[serde(rename = "Options")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub options: Option<HashMap<String, String>>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -6136,7 +6051,6 @@ pub struct SwarmUnlockRequest {
     #[serde(rename = "UnlockKey")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub unlock_key: Option<String>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -6149,7 +6063,6 @@ pub struct SystemAuthResponse {
     #[serde(rename = "IdentityToken")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub identity_token: Option<String>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -6173,12 +6086,11 @@ pub struct SystemDataUsageResponse {
     #[serde(rename = "BuildCache")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub build_cache: Option<Vec<BuildCache>>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct SystemInfo {
-    /// Unique identifier of the daemon.  <p><br /></p>  > **Note**: The format of the ID itself is not part of the API, and > should not be considered stable. 
+    /// Unique identifier of the daemon.  <p><br /></p>  > **Note**: The format of the ID itself is not part of the API, and > should not be considered stable.
     #[serde(rename = "ID")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
@@ -6188,22 +6100,22 @@ pub struct SystemInfo {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub containers: Option<i64>,
 
-    /// Number of containers with status `\"running\"`. 
+    /// Number of containers with status `\"running\"`.
     #[serde(rename = "ContainersRunning")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub containers_running: Option<i64>,
 
-    /// Number of containers with status `\"paused\"`. 
+    /// Number of containers with status `\"paused\"`.
     #[serde(rename = "ContainersPaused")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub containers_paused: Option<i64>,
 
-    /// Number of containers with status `\"stopped\"`. 
+    /// Number of containers with status `\"stopped\"`.
     #[serde(rename = "ContainersStopped")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub containers_stopped: Option<i64>,
 
-    /// Total number of images on the host.  Both _tagged_ and _untagged_ (dangling) images are counted. 
+    /// Total number of images on the host.  Both _tagged_ and _untagged_ (dangling) images are counted.
     #[serde(rename = "Images")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub images: Option<i64>,
@@ -6213,12 +6125,12 @@ pub struct SystemInfo {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub driver: Option<String>,
 
-    /// Information specific to the storage driver, provided as \"label\" / \"value\" pairs.  This information is provided by the storage driver, and formatted in a way consistent with the output of `docker info` on the command line.  <p><br /></p>  > **Note**: The information returned in this field, including the > formatting of values and labels, should not be considered stable, > and may change without notice. 
+    /// Information specific to the storage driver, provided as \"label\" / \"value\" pairs.  This information is provided by the storage driver, and formatted in a way consistent with the output of `docker info` on the command line.  <p><br /></p>  > **Note**: The information returned in this field, including the > formatting of values and labels, should not be considered stable, > and may change without notice.
     #[serde(rename = "DriverStatus")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub driver_status: Option<Vec<Vec<String>>>,
 
-    /// Root directory of persistent Docker state.  Defaults to `/var/lib/docker` on Linux, and `C:\\ProgramData\\docker` on Windows. 
+    /// Root directory of persistent Docker state.  Defaults to `/var/lib/docker` on Linux, and `C:\\ProgramData\\docker` on Windows.
     #[serde(rename = "DockerRootDir")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub docker_root_dir: Option<String>,
@@ -6237,27 +6149,27 @@ pub struct SystemInfo {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub swap_limit: Option<bool>,
 
-    /// Indicates if the host has kernel memory TCP limit support enabled. This field is omitted if not supported.  Kernel memory TCP limits are not supported when using cgroups v2, which does not support the corresponding `memory.kmem.tcp.limit_in_bytes` cgroup. 
+    /// Indicates if the host has kernel memory TCP limit support enabled. This field is omitted if not supported.  Kernel memory TCP limits are not supported when using cgroups v2, which does not support the corresponding `memory.kmem.tcp.limit_in_bytes` cgroup.
     #[serde(rename = "KernelMemoryTCP")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub kernel_memory_tcp: Option<bool>,
 
-    /// Indicates if CPU CFS(Completely Fair Scheduler) period is supported by the host. 
+    /// Indicates if CPU CFS(Completely Fair Scheduler) period is supported by the host.
     #[serde(rename = "CpuCfsPeriod")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub cpu_cfs_period: Option<bool>,
 
-    /// Indicates if CPU CFS(Completely Fair Scheduler) quota is supported by the host. 
+    /// Indicates if CPU CFS(Completely Fair Scheduler) quota is supported by the host.
     #[serde(rename = "CpuCfsQuota")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub cpu_cfs_quota: Option<bool>,
 
-    /// Indicates if CPU Shares limiting is supported by the host. 
+    /// Indicates if CPU Shares limiting is supported by the host.
     #[serde(rename = "CPUShares")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub cpu_shares: Option<bool>,
 
-    /// Indicates if CPUsets (cpuset.cpus, cpuset.mems) are supported by the host.  See [cpuset(7)](https://www.kernel.org/doc/Documentation/cgroup-v1/cpusets.txt) 
+    /// Indicates if CPUsets (cpuset.cpus, cpuset.mems) are supported by the host.  See [cpuset(7)](https://www.kernel.org/doc/Documentation/cgroup-v1/cpusets.txt)
     #[serde(rename = "CPUSet")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub cpu_set: Option<bool>,
@@ -6287,37 +6199,37 @@ pub struct SystemInfo {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub bridge_nf_ip6tables: Option<bool>,
 
-    /// Indicates if the daemon is running in debug-mode / with debug-level logging enabled. 
+    /// Indicates if the daemon is running in debug-mode / with debug-level logging enabled.
     #[serde(rename = "Debug")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub debug: Option<bool>,
 
-    /// The total number of file Descriptors in use by the daemon process.  This information is only returned if debug-mode is enabled. 
+    /// The total number of file Descriptors in use by the daemon process.  This information is only returned if debug-mode is enabled.
     #[serde(rename = "NFd")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub nfd: Option<i64>,
 
-    /// The  number of goroutines that currently exist.  This information is only returned if debug-mode is enabled. 
+    /// The  number of goroutines that currently exist.  This information is only returned if debug-mode is enabled.
     #[serde(rename = "NGoroutines")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub n_goroutines: Option<i64>,
 
-    /// Current system-time in [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds. 
+    /// Current system-time in [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
     #[serde(rename = "SystemTime")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub system_time: Option<String>,
 
-    /// The logging driver to use as a default for new containers. 
+    /// The logging driver to use as a default for new containers.
     #[serde(rename = "LoggingDriver")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub logging_driver: Option<String>,
 
-    /// The driver to use for managing cgroups. 
+    /// The driver to use for managing cgroups.
     #[serde(rename = "CgroupDriver")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub cgroup_driver: Option<SystemInfoCgroupDriverEnum>,
 
-    /// The version of the cgroup. 
+    /// The version of the cgroup.
     #[serde(rename = "CgroupVersion")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub cgroup_version: Option<SystemInfoCgroupVersionEnum>,
@@ -6327,42 +6239,42 @@ pub struct SystemInfo {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub n_events_listener: Option<i64>,
 
-    /// Kernel version of the host.  On Linux, this information obtained from `uname`. On Windows this information is queried from the <kbd>HKEY_LOCAL_MACHINE\\\\SOFTWARE\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\</kbd> registry value, for example _\"10.0 14393 (14393.1198.amd64fre.rs1_release_sec.170427-1353)\"_. 
+    /// Kernel version of the host.  On Linux, this information obtained from `uname`. On Windows this information is queried from the <kbd>HKEY_LOCAL_MACHINE\\\\SOFTWARE\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\</kbd> registry value, for example _\"10.0 14393 (14393.1198.amd64fre.rs1_release_sec.170427-1353)\"_.
     #[serde(rename = "KernelVersion")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub kernel_version: Option<String>,
 
-    /// Name of the host's operating system, for example: \"Ubuntu 16.04.2 LTS\" or \"Windows Server 2016 Datacenter\" 
+    /// Name of the host's operating system, for example: \"Ubuntu 16.04.2 LTS\" or \"Windows Server 2016 Datacenter\"
     #[serde(rename = "OperatingSystem")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub operating_system: Option<String>,
 
-    /// Version of the host's operating system  <p><br /></p>  > **Note**: The information returned in this field, including its > very existence, and the formatting of values, should not be considered > stable, and may change without notice. 
+    /// Version of the host's operating system  <p><br /></p>  > **Note**: The information returned in this field, including its > very existence, and the formatting of values, should not be considered > stable, and may change without notice.
     #[serde(rename = "OSVersion")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub os_version: Option<String>,
 
-    /// Generic type of the operating system of the host, as returned by the Go runtime (`GOOS`).  Currently returned values are \"linux\" and \"windows\". A full list of possible values can be found in the [Go documentation](https://golang.org/doc/install/source#environment). 
+    /// Generic type of the operating system of the host, as returned by the Go runtime (`GOOS`).  Currently returned values are \"linux\" and \"windows\". A full list of possible values can be found in the [Go documentation](https://golang.org/doc/install/source#environment).
     #[serde(rename = "OSType")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub os_type: Option<String>,
 
-    /// Hardware architecture of the host, as returned by the Go runtime (`GOARCH`).  A full list of possible values can be found in the [Go documentation](https://golang.org/doc/install/source#environment). 
+    /// Hardware architecture of the host, as returned by the Go runtime (`GOARCH`).  A full list of possible values can be found in the [Go documentation](https://golang.org/doc/install/source#environment).
     #[serde(rename = "Architecture")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub architecture: Option<String>,
 
-    /// The number of logical CPUs usable by the daemon.  The number of available CPUs is checked by querying the operating system when the daemon starts. Changes to operating system CPU allocation after the daemon is started are not reflected. 
+    /// The number of logical CPUs usable by the daemon.  The number of available CPUs is checked by querying the operating system when the daemon starts. Changes to operating system CPU allocation after the daemon is started are not reflected.
     #[serde(rename = "NCPU")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub ncpu: Option<i64>,
 
-    /// Total amount of physical memory available on the host, in bytes. 
+    /// Total amount of physical memory available on the host, in bytes.
     #[serde(rename = "MemTotal")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub mem_total: Option<i64>,
 
-    /// Address / URL of the index server that is used for image search, and as a default for user authentication for Docker Hub and Docker Cloud. 
+    /// Address / URL of the index server that is used for image search, and as a default for user authentication for Docker Hub and Docker Cloud.
     #[serde(rename = "IndexServerAddress")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub index_server_address: Option<String>,
@@ -6375,17 +6287,17 @@ pub struct SystemInfo {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub generic_resources: Option<GenericResources>,
 
-    /// HTTP-proxy configured for the daemon. This value is obtained from the [`HTTP_PROXY`](https://www.gnu.org/software/wget/manual/html_node/Proxies.html) environment variable. Credentials ([user info component](https://tools.ietf.org/html/rfc3986#section-3.2.1)) in the proxy URL are masked in the API response.  Containers do not automatically inherit this configuration. 
+    /// HTTP-proxy configured for the daemon. This value is obtained from the [`HTTP_PROXY`](https://www.gnu.org/software/wget/manual/html_node/Proxies.html) environment variable. Credentials ([user info component](https://tools.ietf.org/html/rfc3986#section-3.2.1)) in the proxy URL are masked in the API response.  Containers do not automatically inherit this configuration.
     #[serde(rename = "HttpProxy")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub http_proxy: Option<String>,
 
-    /// HTTPS-proxy configured for the daemon. This value is obtained from the [`HTTPS_PROXY`](https://www.gnu.org/software/wget/manual/html_node/Proxies.html) environment variable. Credentials ([user info component](https://tools.ietf.org/html/rfc3986#section-3.2.1)) in the proxy URL are masked in the API response.  Containers do not automatically inherit this configuration. 
+    /// HTTPS-proxy configured for the daemon. This value is obtained from the [`HTTPS_PROXY`](https://www.gnu.org/software/wget/manual/html_node/Proxies.html) environment variable. Credentials ([user info component](https://tools.ietf.org/html/rfc3986#section-3.2.1)) in the proxy URL are masked in the API response.  Containers do not automatically inherit this configuration.
     #[serde(rename = "HttpsProxy")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub https_proxy: Option<String>,
 
-    /// Comma-separated list of domain extensions for which no proxy should be used. This value is obtained from the [`NO_PROXY`](https://www.gnu.org/software/wget/manual/html_node/Proxies.html) environment variable.  Containers do not automatically inherit this configuration. 
+    /// Comma-separated list of domain extensions for which no proxy should be used. This value is obtained from the [`NO_PROXY`](https://www.gnu.org/software/wget/manual/html_node/Proxies.html) environment variable.  Containers do not automatically inherit this configuration.
     #[serde(rename = "NoProxy")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub no_proxy: Option<String>,
@@ -6395,37 +6307,37 @@ pub struct SystemInfo {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
-    /// User-defined labels (key/value metadata) as set on the daemon.  <p><br /></p>  > **Note**: When part of a Swarm, nodes can both have _daemon_ labels, > set through the daemon configuration, and _node_ labels, set from a > manager node in the Swarm. Node labels are not included in this > field. Node labels can be retrieved using the `/nodes/(id)` endpoint > on a manager node in the Swarm. 
+    /// User-defined labels (key/value metadata) as set on the daemon.  <p><br /></p>  > **Note**: When part of a Swarm, nodes can both have _daemon_ labels, > set through the daemon configuration, and _node_ labels, set from a > manager node in the Swarm. Node labels are not included in this > field. Node labels can be retrieved using the `/nodes/(id)` endpoint > on a manager node in the Swarm.
     #[serde(rename = "Labels")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub labels: Option<Vec<String>>,
 
-    /// Indicates if experimental features are enabled on the daemon. 
+    /// Indicates if experimental features are enabled on the daemon.
     #[serde(rename = "ExperimentalBuild")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub experimental_build: Option<bool>,
 
-    /// Version string of the daemon.  > **Note**: the [standalone Swarm API](https://docs.docker.com/swarm/swarm-api/) > returns the Swarm version instead of the daemon  version, for example > `swarm/1.2.8`. 
+    /// Version string of the daemon.  > **Note**: the [standalone Swarm API](https://docs.docker.com/swarm/swarm-api/) > returns the Swarm version instead of the daemon  version, for example > `swarm/1.2.8`.
     #[serde(rename = "ServerVersion")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub server_version: Option<String>,
 
-    /// URL of the distributed storage backend.   The storage backend is used for multihost networking (to store network and endpoint information) and by the node discovery mechanism.  <p><br /></p>  > **Deprecated**: This field is only propagated when using standalone Swarm > mode, and overlay networking using an external k/v store. Overlay > networks with Swarm mode enabled use the built-in raft store, and > this field will be empty. 
+    /// URL of the distributed storage backend.   The storage backend is used for multihost networking (to store network and endpoint information) and by the node discovery mechanism.  <p><br /></p>  > **Deprecated**: This field is only propagated when using standalone Swarm > mode, and overlay networking using an external k/v store. Overlay > networks with Swarm mode enabled use the built-in raft store, and > this field will be empty.
     #[serde(rename = "ClusterStore")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub cluster_store: Option<String>,
 
-    /// The network endpoint that the Engine advertises for the purpose of node discovery. ClusterAdvertise is a `host:port` combination on which the daemon is reachable by other hosts.  <p><br /></p>  > **Deprecated**: This field is only propagated when using standalone Swarm > mode, and overlay networking using an external k/v store. Overlay > networks with Swarm mode enabled use the built-in raft store, and > this field will be empty. 
+    /// The network endpoint that the Engine advertises for the purpose of node discovery. ClusterAdvertise is a `host:port` combination on which the daemon is reachable by other hosts.  <p><br /></p>  > **Deprecated**: This field is only propagated when using standalone Swarm > mode, and overlay networking using an external k/v store. Overlay > networks with Swarm mode enabled use the built-in raft store, and > this field will be empty.
     #[serde(rename = "ClusterAdvertise")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub cluster_advertise: Option<String>,
 
-    /// List of [OCI compliant](https://github.com/opencontainers/runtime-spec) runtimes configured on the daemon. Keys hold the \"name\" used to reference the runtime.  The Docker daemon relies on an OCI compliant runtime (invoked via the `containerd` daemon) as its interface to the Linux kernel namespaces, cgroups, and SELinux.  The default runtime is `runc`, and automatically configured. Additional runtimes can be configured by the user and will be listed here. 
+    /// List of [OCI compliant](https://github.com/opencontainers/runtime-spec) runtimes configured on the daemon. Keys hold the \"name\" used to reference the runtime.  The Docker daemon relies on an OCI compliant runtime (invoked via the `containerd` daemon) as its interface to the Linux kernel namespaces, cgroups, and SELinux.  The default runtime is `runc`, and automatically configured. Additional runtimes can be configured by the user and will be listed here.
     #[serde(rename = "Runtimes")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub runtimes: Option<HashMap<String, Runtime>>,
 
-    /// Name of the default OCI runtime that is used when starting containers.  The default can be overridden per-container at create time. 
+    /// Name of the default OCI runtime that is used when starting containers.  The default can be overridden per-container at create time.
     #[serde(rename = "DefaultRuntime")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub default_runtime: Option<String>,
@@ -6434,17 +6346,17 @@ pub struct SystemInfo {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub swarm: Option<SwarmInfo>,
 
-    /// Indicates if live restore is enabled.  If enabled, containers are kept running when the daemon is shutdown or upon daemon start if running containers are detected. 
+    /// Indicates if live restore is enabled.  If enabled, containers are kept running when the daemon is shutdown or upon daemon start if running containers are detected.
     #[serde(rename = "LiveRestoreEnabled")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub live_restore_enabled: Option<bool>,
 
-    /// Represents the isolation technology to use as a default for containers. The supported values are platform-specific.  If no isolation value is specified on daemon start, on Windows client, the default is `hyperv`, and on Windows server, the default is `process`.  This option is currently not used on other platforms. 
+    /// Represents the isolation technology to use as a default for containers. The supported values are platform-specific.  If no isolation value is specified on daemon start, on Windows client, the default is `hyperv`, and on Windows server, the default is `process`.  This option is currently not used on other platforms.
     #[serde(rename = "Isolation")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub isolation: Option<SystemInfoIsolationEnum>,
 
-    /// Name and, optional, path of the `docker-init` binary.  If the path is omitted, the daemon searches the host's `$PATH` for the binary and uses the first result. 
+    /// Name and, optional, path of the `docker-init` binary.  If the path is omitted, the daemon searches the host's `$PATH` for the binary and uses the first result.
     #[serde(rename = "InitBinary")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub init_binary: Option<String>,
@@ -6461,31 +6373,30 @@ pub struct SystemInfo {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub init_commit: Option<Commit>,
 
-    /// List of security features that are enabled on the daemon, such as apparmor, seccomp, SELinux, user-namespaces (userns), rootless and no-new-privileges.  Additional configuration options for each security feature may be present, and are included as a comma-separated list of key/value pairs. 
+    /// List of security features that are enabled on the daemon, such as apparmor, seccomp, SELinux, user-namespaces (userns), rootless and no-new-privileges.  Additional configuration options for each security feature may be present, and are included as a comma-separated list of key/value pairs.
     #[serde(rename = "SecurityOptions")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub security_options: Option<Vec<String>>,
 
-    /// Reports a summary of the product license on the daemon.  If a commercial license has been applied to the daemon, information such as number of nodes, and expiration are included. 
+    /// Reports a summary of the product license on the daemon.  If a commercial license has been applied to the daemon, information such as number of nodes, and expiration are included.
     #[serde(rename = "ProductLicense")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub product_license: Option<String>,
 
-    /// List of custom default address pools for local networks, which can be specified in the daemon.json file or dockerd option.  Example: a Base \"10.10.0.0/16\" with Size 24 will define the set of 256 10.10.[0-255].0/24 address pools. 
+    /// List of custom default address pools for local networks, which can be specified in the daemon.json file or dockerd option.  Example: a Base \"10.10.0.0/16\" with Size 24 will define the set of 256 10.10.[0-255].0/24 address pools.
     #[serde(rename = "DefaultAddressPools")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub default_address_pools: Option<Vec<SystemInfoDefaultAddressPools>>,
 
-    /// List of warnings / informational messages about missing features, or issues related to the daemon configuration.  These messages can be printed by the client as information to the user. 
+    /// List of warnings / informational messages about missing features, or issues related to the daemon configuration.  These messages can be printed by the client as information to the user.
     #[serde(rename = "Warnings")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub warnings: Option<Vec<String>>,
-
 }
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, Eq, Ord)]
-pub enum SystemInfoCgroupDriverEnum { 
+pub enum SystemInfoCgroupDriverEnum {
     #[serde(rename = "")]
     EMPTY,
     #[serde(rename = "cgroupfs")]
@@ -6498,12 +6409,11 @@ pub enum SystemInfoCgroupDriverEnum {
 
 impl ::std::fmt::Display for SystemInfoCgroupDriverEnum {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        match *self { 
+        match *self {
             SystemInfoCgroupDriverEnum::EMPTY => write!(f, ""),
             SystemInfoCgroupDriverEnum::CGROUPFS => write!(f, "{}", "cgroupfs"),
             SystemInfoCgroupDriverEnum::SYSTEMD => write!(f, "{}", "systemd"),
             SystemInfoCgroupDriverEnum::NONE => write!(f, "{}", "none"),
-
         }
     }
 }
@@ -6511,7 +6421,7 @@ impl ::std::fmt::Display for SystemInfoCgroupDriverEnum {
 impl ::std::str::FromStr for SystemInfoCgroupDriverEnum {
     type Err = String;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s { 
+        match s {
             "" => Ok(SystemInfoCgroupDriverEnum::EMPTY),
             "cgroupfs" => Ok(SystemInfoCgroupDriverEnum::CGROUPFS),
             "systemd" => Ok(SystemInfoCgroupDriverEnum::SYSTEMD),
@@ -6523,7 +6433,7 @@ impl ::std::str::FromStr for SystemInfoCgroupDriverEnum {
 
 impl ::std::convert::AsRef<str> for SystemInfoCgroupDriverEnum {
     fn as_ref(&self) -> &str {
-        match self { 
+        match self {
             SystemInfoCgroupDriverEnum::EMPTY => "",
             SystemInfoCgroupDriverEnum::CGROUPFS => "cgroupfs",
             SystemInfoCgroupDriverEnum::SYSTEMD => "systemd",
@@ -6534,7 +6444,7 @@ impl ::std::convert::AsRef<str> for SystemInfoCgroupDriverEnum {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, Eq, Ord)]
-pub enum SystemInfoCgroupVersionEnum { 
+pub enum SystemInfoCgroupVersionEnum {
     #[serde(rename = "")]
     EMPTY,
     #[serde(rename = "1")]
@@ -6545,11 +6455,10 @@ pub enum SystemInfoCgroupVersionEnum {
 
 impl ::std::fmt::Display for SystemInfoCgroupVersionEnum {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        match *self { 
+        match *self {
             SystemInfoCgroupVersionEnum::EMPTY => write!(f, ""),
             SystemInfoCgroupVersionEnum::_1 => write!(f, "{}", "1"),
             SystemInfoCgroupVersionEnum::_2 => write!(f, "{}", "2"),
-
         }
     }
 }
@@ -6557,7 +6466,7 @@ impl ::std::fmt::Display for SystemInfoCgroupVersionEnum {
 impl ::std::str::FromStr for SystemInfoCgroupVersionEnum {
     type Err = String;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s { 
+        match s {
             "" => Ok(SystemInfoCgroupVersionEnum::EMPTY),
             "1" => Ok(SystemInfoCgroupVersionEnum::_1),
             "2" => Ok(SystemInfoCgroupVersionEnum::_2),
@@ -6568,7 +6477,7 @@ impl ::std::str::FromStr for SystemInfoCgroupVersionEnum {
 
 impl ::std::convert::AsRef<str> for SystemInfoCgroupVersionEnum {
     fn as_ref(&self) -> &str {
-        match self { 
+        match self {
             SystemInfoCgroupVersionEnum::EMPTY => "",
             SystemInfoCgroupVersionEnum::_1 => "1",
             SystemInfoCgroupVersionEnum::_2 => "2",
@@ -6578,7 +6487,7 @@ impl ::std::convert::AsRef<str> for SystemInfoCgroupVersionEnum {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, Eq, Ord)]
-pub enum SystemInfoIsolationEnum { 
+pub enum SystemInfoIsolationEnum {
     #[serde(rename = "")]
     EMPTY,
     #[serde(rename = "default")]
@@ -6591,12 +6500,11 @@ pub enum SystemInfoIsolationEnum {
 
 impl ::std::fmt::Display for SystemInfoIsolationEnum {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        match *self { 
+        match *self {
             SystemInfoIsolationEnum::EMPTY => write!(f, ""),
             SystemInfoIsolationEnum::DEFAULT => write!(f, "{}", "default"),
             SystemInfoIsolationEnum::HYPERV => write!(f, "{}", "hyperv"),
             SystemInfoIsolationEnum::PROCESS => write!(f, "{}", "process"),
-
         }
     }
 }
@@ -6604,7 +6512,7 @@ impl ::std::fmt::Display for SystemInfoIsolationEnum {
 impl ::std::str::FromStr for SystemInfoIsolationEnum {
     type Err = String;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s { 
+        match s {
             "" => Ok(SystemInfoIsolationEnum::EMPTY),
             "default" => Ok(SystemInfoIsolationEnum::DEFAULT),
             "hyperv" => Ok(SystemInfoIsolationEnum::HYPERV),
@@ -6616,7 +6524,7 @@ impl ::std::str::FromStr for SystemInfoIsolationEnum {
 
 impl ::std::convert::AsRef<str> for SystemInfoIsolationEnum {
     fn as_ref(&self) -> &str {
-        match self { 
+        match self {
             SystemInfoIsolationEnum::EMPTY => "",
             SystemInfoIsolationEnum::DEFAULT => "default",
             SystemInfoIsolationEnum::HYPERV => "hyperv",
@@ -6636,17 +6544,16 @@ pub struct SystemInfoDefaultAddressPools {
     #[serde(rename = "Size")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub size: Option<i64>,
-
 }
 
-/// Response of Engine API: GET \"/version\" 
+/// Response of Engine API: GET \"/version\"
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct SystemVersion {
     #[serde(rename = "Platform")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub platform: Option<SystemVersionPlatform>,
 
-    /// Information about system components 
+    /// Information about system components
     #[serde(rename = "Components")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub components: Option<Vec<SystemVersionComponents>>,
@@ -6656,75 +6563,72 @@ pub struct SystemVersion {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 
-    /// The default (and highest) API version that is supported by the daemon 
+    /// The default (and highest) API version that is supported by the daemon
     #[serde(rename = "ApiVersion")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub api_version: Option<String>,
 
-    /// The minimum API version that is supported by the daemon 
+    /// The minimum API version that is supported by the daemon
     #[serde(rename = "MinAPIVersion")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub min_api_version: Option<String>,
 
-    /// The Git commit of the source code that was used to build the daemon 
+    /// The Git commit of the source code that was used to build the daemon
     #[serde(rename = "GitCommit")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub git_commit: Option<String>,
 
-    /// The version Go used to compile the daemon, and the version of the Go runtime in use. 
+    /// The version Go used to compile the daemon, and the version of the Go runtime in use.
     #[serde(rename = "GoVersion")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub go_version: Option<String>,
 
-    /// The operating system that the daemon is running on (\"linux\" or \"windows\") 
+    /// The operating system that the daemon is running on (\"linux\" or \"windows\")
     #[serde(rename = "Os")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub os: Option<String>,
 
-    /// The architecture that the daemon is running on 
+    /// The architecture that the daemon is running on
     #[serde(rename = "Arch")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub arch: Option<String>,
 
-    /// The kernel version (`uname -r`) that the daemon is running on.  This field is omitted when empty. 
+    /// The kernel version (`uname -r`) that the daemon is running on.  This field is omitted when empty.
     #[serde(rename = "KernelVersion")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub kernel_version: Option<String>,
 
-    /// Indicates if the daemon is started with experimental features enabled.  This field is omitted when empty / false. 
+    /// Indicates if the daemon is started with experimental features enabled.  This field is omitted when empty / false.
     #[serde(rename = "Experimental")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub experimental: Option<bool>,
 
-    /// The date and time that the daemon was compiled. 
+    /// The date and time that the daemon was compiled.
     #[serde(rename = "BuildTime")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub build_time: Option<String>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct SystemVersionComponents {
-    /// Name of the component 
+    /// Name of the component
     #[serde(rename = "Name")]
     pub name: String,
 
-    /// Version of the component 
+    /// Version of the component
     #[serde(rename = "Version")]
     pub version: String,
 
-    /// Key/value pairs of strings with additional information about the component. These values are intended for informational purposes only, and their content is not defined, and not part of the API specification.  These messages can be printed by the client as information to the user. 
+    /// Key/value pairs of strings with additional information about the component. These values are intended for informational purposes only, and their content is not defined, and not part of the API specification.  These messages can be printed by the client as information to the user.
     #[serde(rename = "Details")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub details: Option<HashMap<(), ()>>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct SystemVersionPlatform {
     #[serde(rename = "Name")]
     pub name: String,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -6796,11 +6700,10 @@ pub struct Task {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub desired_state: Option<TaskState>,
 
-    /// If the Service this Task belongs to is a job-mode service, contains the JobIteration of the Service this Task was created for. Absent if the Task was created for a Replicated or Global Service. 
+    /// If the Service this Task belongs to is a job-mode service, contains the JobIteration of the Service this Task was created for. Absent if the Task was created for a Replicated or Global Service.
     #[serde(rename = "JobIteration")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub job_iteration: Option<ObjectVersion>,
-
 }
 
 /// User modifiable task configuration.
@@ -6830,12 +6733,12 @@ pub struct TaskSpec {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub placement: Option<TaskSpecPlacement>,
 
-    /// A counter that triggers an update even if no relevant parameters have been changed. 
+    /// A counter that triggers an update even if no relevant parameters have been changed.
     #[serde(rename = "ForceUpdate")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub force_update: Option<i64>,
 
-    /// Runtime is the type of runtime specified for the task executor. 
+    /// Runtime is the type of runtime specified for the task executor.
     #[serde(rename = "Runtime")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub runtime: Option<String>,
@@ -6848,10 +6751,9 @@ pub struct TaskSpec {
     #[serde(rename = "LogDriver")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub log_driver: Option<TaskSpecLogDriver>,
-
 }
 
-/// Container spec for the service.  <p><br /></p>  > **Note**: ContainerSpec, NetworkAttachmentSpec, and PluginSpec are > mutually exclusive. PluginSpec is only used when the Runtime field > is set to `plugin`. NetworkAttachmentSpec is used when the Runtime > field is set to `attachment`. 
+/// Container spec for the service.  <p><br /></p>  > **Note**: ContainerSpec, NetworkAttachmentSpec, and PluginSpec are > mutually exclusive. PluginSpec is only used when the Runtime field > is set to `plugin`. NetworkAttachmentSpec is used when the Runtime > field is set to `attachment`.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct TaskSpecContainerSpec {
     /// The image name to use for the container
@@ -6874,12 +6776,12 @@ pub struct TaskSpecContainerSpec {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub args: Option<Vec<String>>,
 
-    /// The hostname to use for the container, as a valid [RFC 1123](https://tools.ietf.org/html/rfc1123) hostname. 
+    /// The hostname to use for the container, as a valid [RFC 1123](https://tools.ietf.org/html/rfc1123) hostname.
     #[serde(rename = "Hostname")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub hostname: Option<String>,
 
-    /// A list of environment variables in the form `VAR=value`. 
+    /// A list of environment variables in the form `VAR=value`.
     #[serde(rename = "Env")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub env: Option<Vec<String>>,
@@ -6894,7 +6796,7 @@ pub struct TaskSpecContainerSpec {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub user: Option<String>,
 
-    /// A list of additional groups that the container process will run as. 
+    /// A list of additional groups that the container process will run as.
     #[serde(rename = "Groups")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub groups: Option<Vec<String>>,
@@ -6918,7 +6820,7 @@ pub struct TaskSpecContainerSpec {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub read_only: Option<bool>,
 
-    /// Specification for mounts to be added to containers created as part of the service. 
+    /// Specification for mounts to be added to containers created as part of the service.
     #[serde(rename = "Mounts")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub mounts: Option<Vec<Mount>>,
@@ -6928,7 +6830,7 @@ pub struct TaskSpecContainerSpec {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub stop_signal: Option<String>,
 
-    /// Amount of time to wait for the container to terminate before forcefully killing it. 
+    /// Amount of time to wait for the container to terminate before forcefully killing it.
     #[serde(rename = "StopGracePeriod")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub stop_grace_period: Option<i64>,
@@ -6937,7 +6839,7 @@ pub struct TaskSpecContainerSpec {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub health_check: Option<HealthConfig>,
 
-    /// A list of hostname/IP mappings to add to the container's `hosts` file. The format of extra hosts is specified in the [hosts(5)](http://man7.org/linux/man-pages/man5/hosts.5.html) man page:      IP_address canonical_hostname [aliases...] 
+    /// A list of hostname/IP mappings to add to the container's `hosts` file. The format of extra hosts is specified in the [hosts(5)](http://man7.org/linux/man-pages/man5/hosts.5.html) man page:      IP_address canonical_hostname [aliases...]
     #[serde(rename = "Hosts")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub hosts: Option<Vec<String>>,
@@ -6946,51 +6848,50 @@ pub struct TaskSpecContainerSpec {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub dns_config: Option<TaskSpecContainerSpecDnsConfig>,
 
-    /// Secrets contains references to zero or more secrets that will be exposed to the service. 
+    /// Secrets contains references to zero or more secrets that will be exposed to the service.
     #[serde(rename = "Secrets")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub secrets: Option<Vec<TaskSpecContainerSpecSecrets>>,
 
-    /// Configs contains references to zero or more configs that will be exposed to the service. 
+    /// Configs contains references to zero or more configs that will be exposed to the service.
     #[serde(rename = "Configs")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub configs: Option<Vec<TaskSpecContainerSpecConfigs>>,
 
-    /// Isolation technology of the containers running the service. (Windows only) 
+    /// Isolation technology of the containers running the service. (Windows only)
     #[serde(rename = "Isolation")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub isolation: Option<TaskSpecContainerSpecIsolationEnum>,
 
-    /// Run an init inside the container that forwards signals and reaps processes. This field is omitted if empty, and the default (as configured on the daemon) is used. 
+    /// Run an init inside the container that forwards signals and reaps processes. This field is omitted if empty, and the default (as configured on the daemon) is used.
     #[serde(rename = "Init")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub init: Option<bool>,
 
-    /// Set kernel namedspaced parameters (sysctls) in the container. The Sysctls option on services accepts the same sysctls as the are supported on containers. Note that while the same sysctls are supported, no guarantees or checks are made about their suitability for a clustered environment, and it's up to the user to determine whether a given sysctl will work properly in a Service. 
+    /// Set kernel namedspaced parameters (sysctls) in the container. The Sysctls option on services accepts the same sysctls as the are supported on containers. Note that while the same sysctls are supported, no guarantees or checks are made about their suitability for a clustered environment, and it's up to the user to determine whether a given sysctl will work properly in a Service.
     #[serde(rename = "Sysctls")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub sysctls: Option<HashMap<String, String>>,
 
-    /// A list of kernel capabilities to add to the default set for the container. 
+    /// A list of kernel capabilities to add to the default set for the container.
     #[serde(rename = "CapabilityAdd")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub capability_add: Option<Vec<String>>,
 
-    /// A list of kernel capabilities to drop from the default set for the container. 
+    /// A list of kernel capabilities to drop from the default set for the container.
     #[serde(rename = "CapabilityDrop")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub capability_drop: Option<Vec<String>>,
 
-    /// A list of resource limits to set in the container. For example: `{\"Name\": \"nofile\", \"Soft\": 1024, \"Hard\": 2048}`\" 
+    /// A list of resource limits to set in the container. For example: `{\"Name\": \"nofile\", \"Soft\": 1024, \"Hard\": 2048}`\"
     #[serde(rename = "Ulimits")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub ulimits: Option<Vec<ResourcesUlimits>>,
-
 }
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, Eq, Ord)]
-pub enum TaskSpecContainerSpecIsolationEnum { 
+pub enum TaskSpecContainerSpecIsolationEnum {
     #[serde(rename = "")]
     EMPTY,
     #[serde(rename = "default")]
@@ -7003,12 +6904,11 @@ pub enum TaskSpecContainerSpecIsolationEnum {
 
 impl ::std::fmt::Display for TaskSpecContainerSpecIsolationEnum {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        match *self { 
+        match *self {
             TaskSpecContainerSpecIsolationEnum::EMPTY => write!(f, ""),
             TaskSpecContainerSpecIsolationEnum::DEFAULT => write!(f, "{}", "default"),
             TaskSpecContainerSpecIsolationEnum::PROCESS => write!(f, "{}", "process"),
             TaskSpecContainerSpecIsolationEnum::HYPERV => write!(f, "{}", "hyperv"),
-
         }
     }
 }
@@ -7016,7 +6916,7 @@ impl ::std::fmt::Display for TaskSpecContainerSpecIsolationEnum {
 impl ::std::str::FromStr for TaskSpecContainerSpecIsolationEnum {
     type Err = String;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s { 
+        match s {
             "" => Ok(TaskSpecContainerSpecIsolationEnum::EMPTY),
             "default" => Ok(TaskSpecContainerSpecIsolationEnum::DEFAULT),
             "process" => Ok(TaskSpecContainerSpecIsolationEnum::PROCESS),
@@ -7028,7 +6928,7 @@ impl ::std::str::FromStr for TaskSpecContainerSpecIsolationEnum {
 
 impl ::std::convert::AsRef<str> for TaskSpecContainerSpecIsolationEnum {
     fn as_ref(&self) -> &str {
-        match self { 
+        match self {
             TaskSpecContainerSpecIsolationEnum::EMPTY => "",
             TaskSpecContainerSpecIsolationEnum::DEFAULT => "default",
             TaskSpecContainerSpecIsolationEnum::PROCESS => "process",
@@ -7043,24 +6943,23 @@ pub struct TaskSpecContainerSpecConfigs {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub file: Option<TaskSpecContainerSpecFile1>,
 
-    /// Runtime represents a target that is not mounted into the container but is used by the task  <p><br /><p>  > **Note**: `Configs.File` and `Configs.Runtime` are mutually > exclusive 
+    /// Runtime represents a target that is not mounted into the container but is used by the task  <p><br /><p>  > **Note**: `Configs.File` and `Configs.Runtime` are mutually > exclusive
     #[serde(rename = "Runtime")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub runtime: Option<HashMap<(), ()>>,
 
-    /// ConfigID represents the ID of the specific config that we're referencing. 
+    /// ConfigID represents the ID of the specific config that we're referencing.
     #[serde(rename = "ConfigID")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub config_id: Option<String>,
 
-    /// ConfigName is the name of the config that this references, but this is just provided for lookup/display purposes. The config in the reference will be identified by its ID. 
+    /// ConfigName is the name of the config that this references, but this is just provided for lookup/display purposes. The config in the reference will be identified by its ID.
     #[serde(rename = "ConfigName")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub config_name: Option<String>,
-
 }
 
-/// Specification for DNS related configurations in resolver configuration file (`resolv.conf`). 
+/// Specification for DNS related configurations in resolver configuration file (`resolv.conf`).
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct TaskSpecContainerSpecDnsConfig {
     /// The IP addresses of the name servers.
@@ -7073,17 +6972,16 @@ pub struct TaskSpecContainerSpecDnsConfig {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub search: Option<Vec<String>>,
 
-    /// A list of internal resolver variables to be modified (e.g., `debug`, `ndots:3`, etc.). 
+    /// A list of internal resolver variables to be modified (e.g., `debug`, `ndots:3`, etc.).
     #[serde(rename = "Options")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub options: Option<Vec<String>>,
-
 }
 
-/// File represents a specific target that is backed by a file. 
+/// File represents a specific target that is backed by a file.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct TaskSpecContainerSpecFile {
-    /// Name represents the final filename in the filesystem. 
+    /// Name represents the final filename in the filesystem.
     #[serde(rename = "Name")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -7102,13 +7000,12 @@ pub struct TaskSpecContainerSpecFile {
     #[serde(rename = "Mode")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub mode: Option<u32>,
-
 }
 
-/// File represents a specific target that is backed by a file.  <p><br /><p>  > **Note**: `Configs.File` and `Configs.Runtime` are mutually exclusive 
+/// File represents a specific target that is backed by a file.  <p><br /><p>  > **Note**: `Configs.File` and `Configs.Runtime` are mutually exclusive
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct TaskSpecContainerSpecFile1 {
-    /// Name represents the final filename in the filesystem. 
+    /// Name represents the final filename in the filesystem.
     #[serde(rename = "Name")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -7127,7 +7024,6 @@ pub struct TaskSpecContainerSpecFile1 {
     #[serde(rename = "Mode")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub mode: Option<u32>,
-
 }
 
 /// Security options for the container
@@ -7140,27 +7036,25 @@ pub struct TaskSpecContainerSpecPrivileges {
     #[serde(rename = "SELinuxContext")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub se_linux_context: Option<TaskSpecContainerSpecPrivilegesSeLinuxContext>,
-
 }
 
 /// CredentialSpec for managed service account (Windows only)
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct TaskSpecContainerSpecPrivilegesCredentialSpec {
-    /// Load credential spec from a Swarm Config with the given ID. The specified config must also be present in the Configs field with the Runtime property set.  <p><br /></p>   > **Note**: `CredentialSpec.File`, `CredentialSpec.Registry`, > and `CredentialSpec.Config` are mutually exclusive. 
+    /// Load credential spec from a Swarm Config with the given ID. The specified config must also be present in the Configs field with the Runtime property set.  <p><br /></p>   > **Note**: `CredentialSpec.File`, `CredentialSpec.Registry`, > and `CredentialSpec.Config` are mutually exclusive.
     #[serde(rename = "Config")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub config: Option<String>,
 
-    /// Load credential spec from this file. The file is read by the daemon, and must be present in the `CredentialSpecs` subdirectory in the docker data directory, which defaults to `C:\\ProgramData\\Docker\\` on Windows.  For example, specifying `spec.json` loads `C:\\ProgramData\\Docker\\CredentialSpecs\\spec.json`.  <p><br /></p>  > **Note**: `CredentialSpec.File`, `CredentialSpec.Registry`, > and `CredentialSpec.Config` are mutually exclusive. 
+    /// Load credential spec from this file. The file is read by the daemon, and must be present in the `CredentialSpecs` subdirectory in the docker data directory, which defaults to `C:\\ProgramData\\Docker\\` on Windows.  For example, specifying `spec.json` loads `C:\\ProgramData\\Docker\\CredentialSpecs\\spec.json`.  <p><br /></p>  > **Note**: `CredentialSpec.File`, `CredentialSpec.Registry`, > and `CredentialSpec.Config` are mutually exclusive.
     #[serde(rename = "File")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub file: Option<String>,
 
-    /// Load credential spec from this value in the Windows registry. The specified registry value must be located in:  `HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Virtualization\\Containers\\CredentialSpecs`  <p><br /></p>   > **Note**: `CredentialSpec.File`, `CredentialSpec.Registry`, > and `CredentialSpec.Config` are mutually exclusive. 
+    /// Load credential spec from this value in the Windows registry. The specified registry value must be located in:  `HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Virtualization\\Containers\\CredentialSpecs`  <p><br /></p>   > **Note**: `CredentialSpec.File`, `CredentialSpec.Registry`, > and `CredentialSpec.Config` are mutually exclusive.
     #[serde(rename = "Registry")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub registry: Option<String>,
-
 }
 
 /// SELinux labels of the container
@@ -7190,7 +7084,6 @@ pub struct TaskSpecContainerSpecPrivilegesSeLinuxContext {
     #[serde(rename = "Level")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub level: Option<String>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -7199,19 +7092,18 @@ pub struct TaskSpecContainerSpecSecrets {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub file: Option<TaskSpecContainerSpecFile>,
 
-    /// SecretID represents the ID of the specific secret that we're referencing. 
+    /// SecretID represents the ID of the specific secret that we're referencing.
     #[serde(rename = "SecretID")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub secret_id: Option<String>,
 
-    /// SecretName is the name of the secret that this references, but this is just provided for lookup/display purposes. The secret in the reference will be identified by its ID. 
+    /// SecretName is the name of the secret that this references, but this is just provided for lookup/display purposes. The secret in the reference will be identified by its ID.
     #[serde(rename = "SecretName")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub secret_name: Option<String>,
-
 }
 
-/// Specifies the log driver to use for tasks created from this spec. If not present, the default one for the swarm will be used, finally falling back to the engine default if not specified. 
+/// Specifies the log driver to use for tasks created from this spec. If not present, the default one for the swarm will be used, finally falling back to the engine default if not specified.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct TaskSpecLogDriver {
     #[serde(rename = "Name")]
@@ -7221,41 +7113,38 @@ pub struct TaskSpecLogDriver {
     #[serde(rename = "Options")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub options: Option<HashMap<String, String>>,
-
 }
 
-/// Read-only spec type for non-swarm containers attached to swarm overlay networks.  <p><br /></p>  > **Note**: ContainerSpec, NetworkAttachmentSpec, and PluginSpec are > mutually exclusive. PluginSpec is only used when the Runtime field > is set to `plugin`. NetworkAttachmentSpec is used when the Runtime > field is set to `attachment`. 
+/// Read-only spec type for non-swarm containers attached to swarm overlay networks.  <p><br /></p>  > **Note**: ContainerSpec, NetworkAttachmentSpec, and PluginSpec are > mutually exclusive. PluginSpec is only used when the Runtime field > is set to `plugin`. NetworkAttachmentSpec is used when the Runtime > field is set to `attachment`.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct TaskSpecNetworkAttachmentSpec {
     /// ID of the container represented by this task
     #[serde(rename = "ContainerID")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub container_id: Option<String>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct TaskSpecPlacement {
-    /// An array of constraint expressions to limit the set of nodes where a task can be scheduled. Constraint expressions can either use a _match_ (`==`) or _exclude_ (`!=`) rule. Multiple constraints find nodes that satisfy every expression (AND match). Constraints can match node or Docker Engine labels as follows:  node attribute       | matches                        | example ---------------------|--------------------------------|----------------------------------------------- `node.id`            | Node ID                        | `node.id==2ivku8v2gvtg4` `node.hostname`      | Node hostname                  | `node.hostname!=node-2` `node.role`          | Node role (`manager`/`worker`) | `node.role==manager` `node.platform.os`   | Node operating system          | `node.platform.os==windows` `node.platform.arch` | Node architecture              | `node.platform.arch==x86_64` `node.labels`        | User-defined node labels       | `node.labels.security==high` `engine.labels`      | Docker Engine's labels         | `engine.labels.operatingsystem==ubuntu-14.04`  `engine.labels` apply to Docker Engine labels like operating system, drivers, etc. Swarm administrators add `node.labels` for operational purposes by using the [`node update endpoint`](#operation/NodeUpdate). 
+    /// An array of constraint expressions to limit the set of nodes where a task can be scheduled. Constraint expressions can either use a _match_ (`==`) or _exclude_ (`!=`) rule. Multiple constraints find nodes that satisfy every expression (AND match). Constraints can match node or Docker Engine labels as follows:  node attribute       | matches                        | example ---------------------|--------------------------------|----------------------------------------------- `node.id`            | Node ID                        | `node.id==2ivku8v2gvtg4` `node.hostname`      | Node hostname                  | `node.hostname!=node-2` `node.role`          | Node role (`manager`/`worker`) | `node.role==manager` `node.platform.os`   | Node operating system          | `node.platform.os==windows` `node.platform.arch` | Node architecture              | `node.platform.arch==x86_64` `node.labels`        | User-defined node labels       | `node.labels.security==high` `engine.labels`      | Docker Engine's labels         | `engine.labels.operatingsystem==ubuntu-14.04`  `engine.labels` apply to Docker Engine labels like operating system, drivers, etc. Swarm administrators add `node.labels` for operational purposes by using the [`node update endpoint`](#operation/NodeUpdate).
     #[serde(rename = "Constraints")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub constraints: Option<Vec<String>>,
 
-    /// Preferences provide a way to make the scheduler aware of factors such as topology. They are provided in order from highest to lowest precedence. 
+    /// Preferences provide a way to make the scheduler aware of factors such as topology. They are provided in order from highest to lowest precedence.
     #[serde(rename = "Preferences")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub preferences: Option<Vec<TaskSpecPlacementPreferences>>,
 
-    /// Maximum number of replicas for per node (default value is 0, which is unlimited) 
+    /// Maximum number of replicas for per node (default value is 0, which is unlimited)
     #[serde(rename = "MaxReplicas")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub max_replicas: Option<i64>,
 
-    /// Platforms stores all the platforms that the service's image can run on. This field is used in the platform filter for scheduling. If empty, then the platform filter is off, meaning there are no scheduling restrictions. 
+    /// Platforms stores all the platforms that the service's image can run on. This field is used in the platform filter for scheduling. If empty, then the platform filter is off, meaning there are no scheduling restrictions.
     #[serde(rename = "Platforms")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub platforms: Option<Vec<Platform>>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -7263,19 +7152,17 @@ pub struct TaskSpecPlacementPreferences {
     #[serde(rename = "Spread")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub spread: Option<TaskSpecPlacementSpread>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct TaskSpecPlacementSpread {
-    /// label descriptor, such as `engine.labels.az`. 
+    /// label descriptor, such as `engine.labels.az`.
     #[serde(rename = "SpreadDescriptor")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub spread_descriptor: Option<String>,
-
 }
 
-/// Plugin spec for the service.  *(Experimental release only.)*  <p><br /></p>  > **Note**: ContainerSpec, NetworkAttachmentSpec, and PluginSpec are > mutually exclusive. PluginSpec is only used when the Runtime field > is set to `plugin`. NetworkAttachmentSpec is used when the Runtime > field is set to `attachment`. 
+/// Plugin spec for the service.  *(Experimental release only.)*  <p><br /></p>  > **Note**: ContainerSpec, NetworkAttachmentSpec, and PluginSpec are > mutually exclusive. PluginSpec is only used when the Runtime field > is set to `plugin`. NetworkAttachmentSpec is used when the Runtime > field is set to `attachment`.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct TaskSpecPluginSpec {
     /// The name or 'alias' to use for the plugin.
@@ -7296,10 +7183,9 @@ pub struct TaskSpecPluginSpec {
     #[serde(rename = "PluginPrivilege")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub plugin_privilege: Option<Vec<PluginPrivilege>>,
-
 }
 
-/// Resource requirements which apply to each individual container created as part of the service. 
+/// Resource requirements which apply to each individual container created as part of the service.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct TaskSpecResources {
     /// Define resources limits.
@@ -7311,10 +7197,9 @@ pub struct TaskSpecResources {
     #[serde(rename = "Reservations")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub reservations: Option<ResourceObject>,
-
 }
 
-/// Specification for the restart policy which applies to containers created as part of this service. 
+/// Specification for the restart policy which applies to containers created as part of this service.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct TaskSpecRestartPolicy {
     /// Condition for restart.
@@ -7327,21 +7212,20 @@ pub struct TaskSpecRestartPolicy {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub delay: Option<i64>,
 
-    /// Maximum attempts to restart a given container before giving up (default value is 0, which is ignored). 
+    /// Maximum attempts to restart a given container before giving up (default value is 0, which is ignored).
     #[serde(rename = "MaxAttempts")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub max_attempts: Option<i64>,
 
-    /// Windows is the time window used to evaluate the restart policy (default value is 0, which is unbounded). 
+    /// Windows is the time window used to evaluate the restart policy (default value is 0, which is unbounded).
     #[serde(rename = "Window")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub window: Option<i64>,
-
 }
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, Eq, Ord)]
-pub enum TaskSpecRestartPolicyConditionEnum { 
+pub enum TaskSpecRestartPolicyConditionEnum {
     #[serde(rename = "")]
     EMPTY,
     #[serde(rename = "none")]
@@ -7354,12 +7238,11 @@ pub enum TaskSpecRestartPolicyConditionEnum {
 
 impl ::std::fmt::Display for TaskSpecRestartPolicyConditionEnum {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        match *self { 
+        match *self {
             TaskSpecRestartPolicyConditionEnum::EMPTY => write!(f, ""),
             TaskSpecRestartPolicyConditionEnum::NONE => write!(f, "{}", "none"),
             TaskSpecRestartPolicyConditionEnum::ON_FAILURE => write!(f, "{}", "on-failure"),
             TaskSpecRestartPolicyConditionEnum::ANY => write!(f, "{}", "any"),
-
         }
     }
 }
@@ -7367,7 +7250,7 @@ impl ::std::fmt::Display for TaskSpecRestartPolicyConditionEnum {
 impl ::std::str::FromStr for TaskSpecRestartPolicyConditionEnum {
     type Err = String;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s { 
+        match s {
             "" => Ok(TaskSpecRestartPolicyConditionEnum::EMPTY),
             "none" => Ok(TaskSpecRestartPolicyConditionEnum::NONE),
             "on-failure" => Ok(TaskSpecRestartPolicyConditionEnum::ON_FAILURE),
@@ -7379,7 +7262,7 @@ impl ::std::str::FromStr for TaskSpecRestartPolicyConditionEnum {
 
 impl ::std::convert::AsRef<str> for TaskSpecRestartPolicyConditionEnum {
     fn as_ref(&self) -> &str {
-        match self { 
+        match self {
             TaskSpecRestartPolicyConditionEnum::EMPTY => "",
             TaskSpecRestartPolicyConditionEnum::NONE => "none",
             TaskSpecRestartPolicyConditionEnum::ON_FAILURE => "on-failure",
@@ -7394,7 +7277,7 @@ impl ::std::convert::AsRef<str> for TaskSpecRestartPolicyConditionEnum {
 #[allow(non_camel_case_types)]
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, Eq, Ord)]
-pub enum TaskState { 
+pub enum TaskState {
     #[serde(rename = "new")]
     NEW,
     #[serde(rename = "allocated")]
@@ -7429,7 +7312,7 @@ pub enum TaskState {
 
 impl ::std::fmt::Display for TaskState {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        match *self { 
+        match *self {
             TaskState::NEW => write!(f, "{}", "new"),
             TaskState::ALLOCATED => write!(f, "{}", "allocated"),
             TaskState::PENDING => write!(f, "{}", "pending"),
@@ -7474,7 +7357,7 @@ impl ::std::str::FromStr for TaskState {
 }
 
 impl std::default::Default for TaskState {
-    fn default() -> Self { 
+    fn default() -> Self {
         TaskState::NEW
     }
 }
@@ -7505,7 +7388,6 @@ pub struct TaskStatus {
     #[serde(rename = "ContainerStatus")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub container_status: Option<TaskStatusContainerStatus>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -7521,7 +7403,6 @@ pub struct TaskStatusContainerStatus {
     #[serde(rename = "ExitCode")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub exit_code: Option<i64>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -7535,13 +7416,12 @@ pub struct ThrottleDevice {
     #[serde(rename = "Rate")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub rate: Option<i64>,
-
 }
 
-/// Information about the issuer of leaf TLS certificates and the trusted root CA certificate. 
+/// Information about the issuer of leaf TLS certificates and the trusted root CA certificate.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct TlsInfo {
-    /// The root CA certificate(s) that are used to validate leaf TLS certificates. 
+    /// The root CA certificate(s) that are used to validate leaf TLS certificates.
     #[serde(rename = "TrustRoot")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub trust_root: Option<String>,
@@ -7551,14 +7431,13 @@ pub struct TlsInfo {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub cert_issuer_subject: Option<String>,
 
-    /// The base64-url-safe-encoded raw public key bytes of the issuer. 
+    /// The base64-url-safe-encoded raw public key bytes of the issuer.
     #[serde(rename = "CertIssuerPublicKey")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub cert_issuer_public_key: Option<String>,
-
 }
 
-/// A map of topological domains to topological segments. For in depth details, see documentation for the Topology object in the CSI specification. 
+/// A map of topological domains to topological segments. For in depth details, see documentation for the Topology object in the CSI specification.
 // special-casing PortMap, cos swagger-codegen doesn't figure out this type
 pub type Topology = HashMap<String, Option<Vec<PortBinding>>>;
 
@@ -7568,7 +7447,6 @@ pub struct UnlockKeyResponse {
     #[serde(rename = "UnlockKey")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub unlock_key: Option<String>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -7595,7 +7473,7 @@ pub struct Volume {
     )]
     pub created_at: Option<BollardDate>,
 
-    /// Low-level details about the volume, provided by the volume driver. Details are returned as a map with key/value pairs: `{\"key\":\"value\",\"key2\":\"value2\"}`.  The `Status` field is optional, and is omitted if the volume driver does not support this feature. 
+    /// Low-level details about the volume, provided by the volume driver. Details are returned as a map with key/value pairs: `{\"key\":\"value\",\"key2\":\"value2\"}`.  The `Status` field is optional, and is omitted if the volume driver does not support this feature.
     #[serde(rename = "Status")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<HashMap<String, HashMap<(), ()>>>,
@@ -7605,7 +7483,7 @@ pub struct Volume {
     #[serde(deserialize_with = "deserialize_nonoptional_map")]
     pub labels: HashMap<String, String>,
 
-    /// The level at which the volume exists. Either `global` for cluster-wide, or `local` for machine level. 
+    /// The level at which the volume exists. Either `global` for cluster-wide, or `local` for machine level.
     #[serde(rename = "Scope")]
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(with = "::serde_with::As::<::serde_with::NoneAsEmptyString>")]
@@ -7615,7 +7493,7 @@ pub struct Volume {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub cluster_volume: Option<ClusterVolume>,
 
-    /// The driver specific options used when creating the volume. 
+    /// The driver specific options used when creating the volume.
     #[serde(rename = "Options")]
     #[serde(deserialize_with = "deserialize_nonoptional_map")]
     pub options: HashMap<String, String>,
@@ -7623,12 +7501,11 @@ pub struct Volume {
     #[serde(rename = "UsageData")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub usage_data: Option<VolumeUsageData>,
-
 }
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, Eq, Ord)]
-pub enum VolumeScopeEnum { 
+pub enum VolumeScopeEnum {
     #[serde(rename = "")]
     EMPTY,
     #[serde(rename = "local")]
@@ -7639,11 +7516,10 @@ pub enum VolumeScopeEnum {
 
 impl ::std::fmt::Display for VolumeScopeEnum {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        match *self { 
+        match *self {
             VolumeScopeEnum::EMPTY => write!(f, ""),
             VolumeScopeEnum::LOCAL => write!(f, "{}", "local"),
             VolumeScopeEnum::GLOBAL => write!(f, "{}", "global"),
-
         }
     }
 }
@@ -7651,7 +7527,7 @@ impl ::std::fmt::Display for VolumeScopeEnum {
 impl ::std::str::FromStr for VolumeScopeEnum {
     type Err = String;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s { 
+        match s {
             "" => Ok(VolumeScopeEnum::EMPTY),
             "local" => Ok(VolumeScopeEnum::LOCAL),
             "global" => Ok(VolumeScopeEnum::GLOBAL),
@@ -7662,7 +7538,7 @@ impl ::std::str::FromStr for VolumeScopeEnum {
 
 impl ::std::convert::AsRef<str> for VolumeScopeEnum {
     fn as_ref(&self) -> &str {
-        match self { 
+        match self {
             VolumeScopeEnum::EMPTY => "",
             VolumeScopeEnum::LOCAL => "local",
             VolumeScopeEnum::GLOBAL => "global",
@@ -7673,7 +7549,7 @@ impl ::std::convert::AsRef<str> for VolumeScopeEnum {
 /// Volume configuration
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct VolumeCreateOptions {
-    /// The new volume's name. If not specified, Docker generates a name. 
+    /// The new volume's name. If not specified, Docker generates a name.
     #[serde(rename = "Name")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -7683,7 +7559,7 @@ pub struct VolumeCreateOptions {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub driver: Option<String>,
 
-    /// A mapping of driver options and values. These options are passed directly to the driver and are driver specific. 
+    /// A mapping of driver options and values. These options are passed directly to the driver and are driver specific.
     #[serde(rename = "DriverOpts")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub driver_opts: Option<HashMap<String, String>>,
@@ -7696,7 +7572,6 @@ pub struct VolumeCreateOptions {
     #[serde(rename = "ClusterVolumeSpec")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub cluster_volume_spec: Option<ClusterVolumeSpec>,
-
 }
 
 /// Volume list response
@@ -7707,11 +7582,10 @@ pub struct VolumeListResponse {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub volumes: Option<Vec<Volume>>,
 
-    /// Warnings that occurred when fetching the list of volumes. 
+    /// Warnings that occurred when fetching the list of volumes.
     #[serde(rename = "Warnings")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub warnings: Option<Vec<String>>,
-
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -7725,18 +7599,16 @@ pub struct VolumePruneResponse {
     #[serde(rename = "SpaceReclaimed")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub space_reclaimed: Option<i64>,
-
 }
 
-/// Usage details about the volume. This information is used by the `GET /system/df` endpoint, and omitted in other endpoints. 
+/// Usage details about the volume. This information is used by the `GET /system/df` endpoint, and omitted in other endpoints.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct VolumeUsageData {
-    /// Amount of disk space used by the volume (in bytes). This information is only available for volumes created with the `\"local\"` volume driver. For volumes created with other volume drivers, this field is set to `-1` (\"not available\") 
+    /// Amount of disk space used by the volume (in bytes). This information is only available for volumes created with the `\"local\"` volume driver. For volumes created with other volume drivers, this field is set to `-1` (\"not available\")
     #[serde(rename = "Size")]
     pub size: i64,
 
-    /// The number of containers referencing this volume. This field is set to `-1` if the reference-count is not available. 
+    /// The number of containers referencing this volume. This field is set to `-1` if the reference-count is not available.
     #[serde(rename = "RefCount")]
     pub ref_count: i64,
-
 }
