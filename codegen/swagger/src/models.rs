@@ -1219,6 +1219,8 @@ pub enum ContainerStateStatusEnum {
     EMPTY,
     #[serde(rename = "created")]
     CREATED,
+    #[serde(rename = "stopped")]
+    STOPPED,
     #[serde(rename = "running")]
     RUNNING,
     #[serde(rename = "paused")]
@@ -1244,6 +1246,7 @@ impl ::std::fmt::Display for ContainerStateStatusEnum {
             ContainerStateStatusEnum::REMOVING => write!(f, "{}", "removing"),
             ContainerStateStatusEnum::EXITED => write!(f, "{}", "exited"),
             ContainerStateStatusEnum::DEAD => write!(f, "{}", "dead"),
+            ContainerStateStatusEnum::STOPPED => write!(f, "{}", "stopped"),
 
         }
     }
@@ -1257,6 +1260,7 @@ impl ::std::str::FromStr for ContainerStateStatusEnum {
             "created" => Ok(ContainerStateStatusEnum::CREATED),
             "running" => Ok(ContainerStateStatusEnum::RUNNING),
             "paused" => Ok(ContainerStateStatusEnum::PAUSED),
+            "stopped" => Ok(ContainerStateStatusEnum::STOPPED),
             "restarting" => Ok(ContainerStateStatusEnum::RESTARTING),
             "removing" => Ok(ContainerStateStatusEnum::REMOVING),
             "exited" => Ok(ContainerStateStatusEnum::EXITED),
@@ -1277,6 +1281,7 @@ impl ::std::convert::AsRef<str> for ContainerStateStatusEnum {
             ContainerStateStatusEnum::REMOVING => "removing",
             ContainerStateStatusEnum::EXITED => "exited",
             ContainerStateStatusEnum::DEAD => "dead",
+            ContainerStateStatusEnum::STOPPED => "stopped",
         }
     }
 }
@@ -3321,7 +3326,7 @@ impl ::std::fmt::Display for MountTypeEnum {
 impl ::std::str::FromStr for MountTypeEnum {
     type Err = String;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s { 
+        match s {
             "" => Ok(MountTypeEnum::EMPTY),
             "bind" => Ok(MountTypeEnum::BIND),
             "volume" => Ok(MountTypeEnum::VOLUME),
@@ -3335,7 +3340,7 @@ impl ::std::str::FromStr for MountTypeEnum {
 
 impl ::std::convert::AsRef<str> for MountTypeEnum {
     fn as_ref(&self) -> &str {
-        match self { 
+        match self {
             MountTypeEnum::EMPTY => "",
             MountTypeEnum::BIND => "bind",
             MountTypeEnum::VOLUME => "volume",
@@ -3363,12 +3368,11 @@ pub struct MountBindOptions {
     #[serde(rename = "CreateMountpoint")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub create_mountpoint: Option<bool>,
-
 }
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, Eq, Ord)]
-pub enum MountBindOptionsPropagationEnum { 
+pub enum MountBindOptionsPropagationEnum {
     #[serde(rename = "")]
     EMPTY,
     #[serde(rename = "private")]
@@ -3387,7 +3391,7 @@ pub enum MountBindOptionsPropagationEnum {
 
 impl ::std::fmt::Display for MountBindOptionsPropagationEnum {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        match *self { 
+        match *self {
             MountBindOptionsPropagationEnum::EMPTY => write!(f, ""),
             MountBindOptionsPropagationEnum::PRIVATE => write!(f, "{}", "private"),
             MountBindOptionsPropagationEnum::RPRIVATE => write!(f, "{}", "rprivate"),
@@ -3395,7 +3399,6 @@ impl ::std::fmt::Display for MountBindOptionsPropagationEnum {
             MountBindOptionsPropagationEnum::RSHARED => write!(f, "{}", "rshared"),
             MountBindOptionsPropagationEnum::SLAVE => write!(f, "{}", "slave"),
             MountBindOptionsPropagationEnum::RSLAVE => write!(f, "{}", "rslave"),
-
         }
     }
 }
